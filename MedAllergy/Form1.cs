@@ -7,7 +7,7 @@ namespace MedAllergy
 {
     public partial class Form1 : Form
     {
-        // 1. Inisialisasi Koneksi
+       
         private readonly SqlConnection conn;
 
         private readonly string connectionString =
@@ -18,22 +18,22 @@ namespace MedAllergy
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
-            this.idUserLogin = idUser; // Simpan ID dari login
+            this.idUserLogin = idUser; 
         }
 
-        // 2. Event Load Form (Menata DataGridView di awal)
+        
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Pengaturan Tabel Makanan
+            
             dgvMakanan.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvMakanan.MultiSelect = false;
             dgvMakanan.ReadOnly = true;
             dgvMakanan.AllowUserToAddRows = false;
             dgvMakanan.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvMakanan.RowHeadersVisible = false; // Hilangkan panah kiri agar rapi
+            dgvMakanan.RowHeadersVisible = false; 
             dgvMakanan.CellClick += dgvMakanan_CellClick;
 
-            // Pengaturan Tabel Gejala (jika ada propertinya)
+            
             if (dgvGejala != null)
             {
                 dgvGejala.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -44,15 +44,15 @@ namespace MedAllergy
                 dgvGejala.RowHeadersVisible = false;
             }
 
-            // Memuat Semua Data Saat Aplikasi Dibuka (CUKUP PANGGIL 1 KALI SAJA)
+            //
            
-            TampilData();         // Tampil tabel makanan
-            LoadComboMakanan();   // Isi pilihan combobox makanan
-            TampilDataGejala();   // Tampil tabel gejala
+            TampilData();         
+            LoadComboMakanan();  
+            TampilDataGejala();   
             TampilDiagnosisSaya();
         }
 
-        // 3. Method Menampilkan Data Makanan
+        
         private void TampilData()
         {
             try
@@ -63,14 +63,14 @@ namespace MedAllergy
                 dgvMakanan.Columns.Clear();
 
                 dgvMakanan.Columns.Add("id_makanan", "ID");
-                dgvMakanan.Columns.Add("nama_pasien", "Nama Pasien"); // Tambahan Kolom Baru
+                dgvMakanan.Columns.Add("nama_pasien", "Nama Pasien"); 
                 dgvMakanan.Columns.Add("nama_makanan", "Nama Makanan");
                 dgvMakanan.Columns.Add("komposisi", "Komposisi");
                 dgvMakanan.Columns.Add("waktu_konsumsi", "Waktu Konsumsi");
 
                 dgvMakanan.Columns["id_makanan"].Visible = false;
 
-                // Menggunakan JOIN agar nama pasien muncul
+                
                 string query = @"SELECT c.id_makanan, u.nama AS nama_pasien, c.nama_makanan, c.komposisi, c.waktu_konsumsi 
                          FROM catatan_makanan c
                          JOIN users u ON c.id_user = u.id_user";
@@ -82,7 +82,7 @@ namespace MedAllergy
                 {
                     dgvMakanan.Rows.Add(
                         reader["id_makanan"].ToString(),
-                        reader["nama_pasien"].ToString(), // Tampilkan data tambahan
+                        reader["nama_pasien"].ToString(), 
                         reader["nama_makanan"].ToString(),
                         reader["komposisi"].ToString(),
                         Convert.ToDateTime(reader["waktu_konsumsi"]).ToString("dd/MM/yyyy HH:mm")
@@ -113,7 +113,7 @@ namespace MedAllergy
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                // 1. Validasi Input Textbox
+               
                 if (string.IsNullOrWhiteSpace(txtNamaPasien.Text))
                 {
                     MessageBox.Show("Nama Pasien harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -128,9 +128,7 @@ namespace MedAllergy
                     return;
                 }
 
-                // ==============================================================
-                // TRIK PINTAR 2.0: Cari ID User. Kalau tidak ada, BUAT OTOMATIS!
-                // ==============================================================
+                
                 string namaDiketik = txtNamaPasien.Text.Trim();
                 int idUser = 0;
 
@@ -142,32 +140,32 @@ namespace MedAllergy
 
                 if (resultId != null)
                 {
-                    // Pasien SUDAH ADA, ambil ID-nya
+                    
                     idUser = Convert.ToInt32(resultId);
                 }
                 else
                 {
-                    // Pasien BELUM ADA. Buat otomatis secara diam-diam!
-                    // Kita tambahkan angka acak di email agar tidak bentrok (UNIQUE)
+                    
+                    
                     string emailDummy = namaDiketik.Replace(" ", "").ToLower() + new Random().Next(1000, 9999) + "@pasien.com";
 
                     string queryBuatBaru = @"INSERT INTO users (nama, email, password, role) 
                                              VALUES (@NamaBaru, @EmailDummy, '12345', 'pasien');
-                                             SELECT SCOPE_IDENTITY();"; // Perintah mengambil ID yang baru tercipta
+                                             SELECT SCOPE_IDENTITY();"; 
 
                     SqlCommand cmdBuat = new SqlCommand(queryBuatBaru, conn);
                     cmdBuat.Parameters.AddWithValue("@NamaBaru", namaDiketik);
                     cmdBuat.Parameters.AddWithValue("@EmailDummy", emailDummy);
 
-                    // Eksekusi dan langsung ambil ID barunya
+                    
                     idUser = Convert.ToInt32(cmdBuat.ExecuteScalar());
 
-                    // Beritahu dokter/user bahwa pasien baru telah ditambahkan
+                    
                     MessageBox.Show($"Pasien baru bernama '{namaDiketik}' telah otomatis didaftarkan ke sistem!", "Info Pasien Baru", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 // ==============================================================
 
-                // 3. Simpan data Makanan menggunakan idUser (baik yang lama maupun yang baru dibuat)
+                
                 string query = @"INSERT INTO catatan_makanan (id_user, nama_makanan, komposisi, waktu_konsumsi) 
                                  VALUES (@IdUser, @NamaMakanan, @Komposisi, @Waktu)";
 
@@ -198,7 +196,7 @@ namespace MedAllergy
             }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
-        // 5. Implementasi UPDATE Makanan
+       
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
@@ -230,8 +228,8 @@ namespace MedAllergy
                     MessageBox.Show("Data berhasil diupdate", "Sukses");
                     ClearForm();
                     TampilData();
-                    LoadComboMakanan(); // Refresh daftar pilihan gejala
-                    TampilDataGejala(); // Refresh tabel gejala (karena nama makanan mungkin berubah)
+                    LoadComboMakanan(); 
+                    TampilDataGejala(); 
                 }
                 else
                 {
@@ -245,7 +243,7 @@ namespace MedAllergy
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
-        // 6. Pembersih Form Makanan
+        
         private void ClearForm()
         {
             txtIdMakanan.Text = "";
@@ -254,7 +252,7 @@ namespace MedAllergy
             dtpWaktu.Value = DateTime.Now;
         }
 
-        // 7. Implementasi DELETE Makanan
+       
         private void btnHapus_Click(object sender, EventArgs e)
         {
             try
@@ -286,8 +284,8 @@ namespace MedAllergy
                         MessageBox.Show("Data berhasil dihapus", "Sukses");
                         ClearForm();
                         TampilData();
-                        LoadComboMakanan(); // Refresh daftar pilihan gejala
-                        TampilDataGejala(); // Refresh tabel gejala
+                        LoadComboMakanan(); 
+                        TampilDataGejala(); 
                     }
                     else
                     {
@@ -307,20 +305,20 @@ namespace MedAllergy
 
         private void dgvMakanan_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // 1. Abaikan jika yang diklik adalah bagian judul kolom (header)
+            
             if (e.RowIndex < 0) return;
 
-            // 2. Ambil baris data yang sedang diklik
+            
             DataGridViewRow row = dgvMakanan.Rows[e.RowIndex];
 
-            // 3. Pindahkan nilai dari tabel ke form input dengan aman
+            
             if (row.Cells["id_makanan"].Value != null)
             {
                 txtIdMakanan.Text = row.Cells["id_makanan"].Value.ToString();
                 txtNamaMakanan.Text = row.Cells["nama_makanan"].Value.ToString();
                 txtKomposisi.Text = row.Cells["komposisi"].Value.ToString();
 
-                // 4. Khusus untuk waktu, ubah teks menjadi format penanggalan
+                
                 if (DateTime.TryParse(row.Cells["waktu_konsumsi"].Value.ToString(), out DateTime waktu))
                 {
                     dtpWaktu.Value = waktu;
@@ -376,7 +374,7 @@ namespace MedAllergy
             }
         }
 
-        // ==========================================================
+        
         // FUNGSI GEJALA ALERGI (MASTER-DETAIL)
         // ==========================================================
 
@@ -392,9 +390,9 @@ namespace MedAllergy
                 da.Fill(dt);
 
                 cmbMakanan.DataSource = dt;
-                cmbMakanan.DisplayMember = "nama_makanan"; // Yang dibaca oleh user
-                cmbMakanan.ValueMember = "id_makanan";     // ID yang disimpan sistem
-                cmbMakanan.SelectedIndex = -1;             // Kosongkan pilihan saat awal
+                cmbMakanan.DisplayMember = "nama_makanan"; 
+                cmbMakanan.ValueMember = "id_makanan";     
+                cmbMakanan.SelectedIndex = -1;             
             }
             catch (Exception ex)
             {
@@ -457,7 +455,7 @@ namespace MedAllergy
 
         private void btnSimpanGejala_Click(object sender, EventArgs e)
         {
-            // Validasi: Pastikan user sudah memilih makanan dari combobox
+            
             if (cmbMakanan.SelectedValue == null)
             {
                 MessageBox.Show("Pilih makanan pemicu terlebih dahulu dari dropdown!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -481,7 +479,7 @@ namespace MedAllergy
                 cmd.Parameters.AddWithValue("@IdMakanan", cmbMakanan.SelectedValue);
                 cmd.Parameters.AddWithValue("@Gejala", txtGejala.Text);
 
-                // Cek apakah combobox keparahan dipilih, jika kosong default ke 'ringan'
+                
                 string keparahan = string.IsNullOrWhiteSpace(cmbKeparahan.Text) ? "ringan" : cmbKeparahan.Text.ToLower();
                 cmd.Parameters.AddWithValue("@Keparahan", keparahan);
 
@@ -494,7 +492,7 @@ namespace MedAllergy
                     txtGejala.Clear();
                     cmbKeparahan.SelectedIndex = -1;
                     dtpWaktuGejala.Value = DateTime.Now;
-                    TampilDataGejala(); // Refresh tabel gejala
+                    TampilDataGejala(); 
                 }
             }
             catch (Exception ex)
@@ -507,9 +505,7 @@ namespace MedAllergy
             }
         }
 
-        // ==========================================================
-        // EVENT KOSONG BAWAAN DESIGNER (Biarkan Saja)
-        // ==========================================================
+        
         private void dgvMakanan_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void lblTotalData_Click(object sender, EventArgs e) { }
         private void txtNamaMakanan_TextChanged(object sender, EventArgs e) { }
@@ -520,17 +516,17 @@ namespace MedAllergy
 
         private void btnHapusGejala_Click(object sender, EventArgs e)
         {
-            // 1. Validasi: Pastikan pengguna sudah mengklik/memilih baris di tabel gejala
+            
             if (dgvGejala.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Silakan klik baris data gejala yang ingin dihapus pada tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // 2. Ambil ID Gejala yang tersembunyi dari baris yang diklik
+            
             string idGejalaTerpilih = dgvGejala.SelectedRows[0].Cells["id_gejala"].Value.ToString();
 
-            // 3. Konfirmasi sebelum menghapus
+            
             DialogResult dialog = MessageBox.Show(
                 "Apakah Anda yakin ingin menghapus data gejala ini?",
                 "Konfirmasi Hapus",
@@ -552,7 +548,7 @@ namespace MedAllergy
                     if (result > 0)
                     {
                         MessageBox.Show("Data gejala berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        TampilDataGejala(); // Refresh tabel gejala agar data yang dihapus langsung hilang
+                        TampilDataGejala(); 
                     }
                 }
                 catch (Exception ex)
@@ -571,7 +567,7 @@ namespace MedAllergy
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                // Cari diagnosis yang id_user-nya cocok dengan pasien yang login
+             
                 string query = @"SELECT tanggal_diagnosis, catatan_medis, tingkat_risiko 
                          FROM diagnosis_dokter 
                          WHERE id_user = @idPasien
@@ -584,7 +580,7 @@ namespace MedAllergy
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                // Tampilkan ke GridView yang baru kita buat
+               
                 dgvDiagnosisPasien.DataSource = dt;
             }
             catch (Exception ex)
