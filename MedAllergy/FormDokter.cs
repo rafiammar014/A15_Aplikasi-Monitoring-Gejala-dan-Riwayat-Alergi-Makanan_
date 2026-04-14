@@ -7,7 +7,7 @@ namespace MedAllergy
 {
     public partial class FormDokter : Form
     {
-        // 1. Inisialisasi Koneksi
+        
         private readonly SqlConnection conn;
 
         private readonly string connectionString =
@@ -19,29 +19,29 @@ namespace MedAllergy
             conn = new SqlConnection(connectionString);
         }
 
-        // 2. Saat Form Dokter Dibuka
+        
         private void FormDokter_Load(object sender, EventArgs e)
         {
-            // Pengaturan Desain Tabel Riwayat (Hanya Baca)
+            
             dgvRiwayatPasien.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRiwayatPasien.MultiSelect = false;
-            dgvRiwayatPasien.ReadOnly = true; // Dokter tidak bisa mengubah data pasien
+            dgvRiwayatPasien.ReadOnly = true;
             dgvRiwayatPasien.AllowUserToAddRows = false;
             dgvRiwayatPasien.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRiwayatPasien.RowHeadersVisible = false;
 
-            // Membuat Kolom Tabel
+            
             dgvRiwayatPasien.Columns.Add("waktu", "Waktu Kejadian");
             dgvRiwayatPasien.Columns.Add("makanan", "Pemicu (Makanan)");
             dgvRiwayatPasien.Columns.Add("gejala", "Gejala yang Muncul");
             dgvRiwayatPasien.Columns.Add("keparahan", "Keparahan");
 
-            // Memuat Pilihan Pasien dan Risiko
+            
             LoadComboPasien();
             LoadComboRisiko();
         }
 
-        // 3. Fungsi Memuat Daftar Pasien
+        
         private void LoadComboPasien()
         {
             try
@@ -55,7 +55,7 @@ namespace MedAllergy
                 cmbPasien.DataSource = dt;
                 cmbPasien.DisplayMember = "nama";
                 cmbPasien.ValueMember = "id_user";
-                cmbPasien.SelectedIndex = -1; // Kosongkan saat awal dibuka
+                cmbPasien.SelectedIndex = -1; 
             }
             catch (Exception ex)
             {
@@ -64,30 +64,30 @@ namespace MedAllergy
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
-        // 4. Fungsi Mengisi Pilihan Risiko Diagnosis
+        
         private void LoadComboRisiko()
         {
             cmbRisiko.Items.Clear();
             cmbRisiko.Items.Add("Rendah");
             cmbRisiko.Items.Add("Menengah");
             cmbRisiko.Items.Add("Tinggi");
-            cmbRisiko.DropDownStyle = ComboBoxStyle.DropDownList; // Kunci agar tidak bisa diketik sembarangan
+            cmbRisiko.DropDownStyle = ComboBoxStyle.DropDownList; 
         }
 
-        // 5. EVENT: Saat Nama Pasien Dipilih, Tampilkan Riwayatnya!
+        
         private void cmbPasien_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Abaikan jika belum ada yang dipilih
+            
             if (cmbPasien.SelectedValue == null || cmbPasien.SelectedIndex == -1) return;
 
-            // Pastikan nilai yang diambil adalah Angka ID
+           
             if (int.TryParse(cmbPasien.SelectedValue.ToString(), out int idPasien))
             {
                 TampilRiwayatPasien(idPasien);
             }
         }
 
-        // 6. Fungsi Utama Menarik Data Riwayat Gabungan (JOIN)
+        
         private void TampilRiwayatPasien(int idPasien)
         {
             try
@@ -95,12 +95,12 @@ namespace MedAllergy
                 if (conn.State == ConnectionState.Closed) conn.Open();
                 dgvRiwayatPasien.Rows.Clear();
 
-                // Menggabungkan tabel Gejala dan Makanan untuk pasien yang dipilih
+                
                 string query = @"SELECT g.waktu_muncul, c.nama_makanan, g.deskripsi_gejala, g.tingkat_keparahan
                                  FROM gejala_alergi g
                                  JOIN catatan_makanan c ON g.id_makanan = c.id_makanan
                                  WHERE c.id_user = @IdUser
-                                 ORDER BY g.waktu_muncul DESC"; // Urutkan dari yang terbaru
+                                 ORDER BY g.waktu_muncul DESC"; 
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@IdUser", idPasien);
@@ -124,10 +124,10 @@ namespace MedAllergy
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
-        // 7. Simpan Diagnosis Dokter
+       
         private void btnSimpanDiagnosis_Click(object sender, EventArgs e)
         {
-            // Validasi kelengkapan data
+            
             if (cmbPasien.SelectedValue == null)
             {
                 MessageBox.Show("Pilih pasien terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -171,7 +171,7 @@ namespace MedAllergy
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
-        // Event Kosong (Biarkan jika terlanjur dibuat oleh desainer)
+        
         private void dgvRiwayatPasien_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void txtHasilDiagnosis_TextChanged(object sender, EventArgs e) { }
 
