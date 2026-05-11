@@ -7,7 +7,6 @@ namespace MedAllergy
 {
     public partial class FormLogin : Form
     {
-        
         private readonly string connectionString = @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
 
         public FormLogin()
@@ -17,7 +16,6 @@ namespace MedAllergy
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            
             if (string.IsNullOrWhiteSpace(txtEmail.Text) || string.IsNullOrWhiteSpace(txtPassword.Text))
             {
                 MessageBox.Show("Email dan Password tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -29,8 +27,6 @@ namespace MedAllergy
             try
             {
                 conn.Open();
-
-                
                 string query = "SELECT id_user, nama, role FROM users WHERE email = @Email AND password = @Password";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
@@ -38,7 +34,6 @@ namespace MedAllergy
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
-               
                 if (reader.Read())
                 {
                     string namaUser = reader["nama"].ToString();
@@ -46,16 +41,13 @@ namespace MedAllergy
 
                     MessageBox.Show("Login Berhasil! Selamat datang, " + namaUser, "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    
                     this.Hide();
 
-                   
                     if (roleUser == "pasien")
                     {
-                        int idLogin = Convert.ToInt32(reader["id_user"]); 
-                        Form1 formPasien = new Form1(idLogin); 
+                        int idLogin = Convert.ToInt32(reader["id_user"]);
+                        Form1 formPasien = new Form1(idLogin);
                         formPasien.Show();
-                        this.Hide();
                     }
                     else if (roleUser == "dokter")
                     {
@@ -66,7 +58,6 @@ namespace MedAllergy
                 }
                 else
                 {
-                    
                     MessageBox.Show("Email atau Password salah!", "Gagal Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtPassword.Clear();
                     txtPassword.Focus();
@@ -82,7 +73,16 @@ namespace MedAllergy
             }
         }
 
-        
+        // Fungsi khusus untuk tombol Registrasi
+        private void lnkRegistrasi_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FormRegister formDaftar = new FormRegister();
+            formDaftar.Show();
+            this.Hide();
+        }
+
+        // --- Fungsi bawaan yang kosong biarkan saja ---
         private void FormLogin_Load(object sender, EventArgs e) { }
+        private void txtPassword_TextChanged(object sender, EventArgs e) { }
     }
 }
