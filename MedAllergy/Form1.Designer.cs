@@ -138,11 +138,12 @@
             // 
             this.txtIdOtomatis.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtIdOtomatis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtIdOtomatis.Location = new System.Drawing.Point(934, 66);
+            this.txtIdOtomatis.Location = new System.Drawing.Point(934, 63);
             this.txtIdOtomatis.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtIdOtomatis.Multiline = true;
             this.txtIdOtomatis.Name = "txtIdOtomatis";
             this.txtIdOtomatis.ReadOnly = true;
-            this.txtIdOtomatis.Size = new System.Drawing.Size(124, 30);
+            this.txtIdOtomatis.Size = new System.Drawing.Size(133, 27);
             this.txtIdOtomatis.TabIndex = 1;
             this.txtIdOtomatis.Text = "ID (Otomatis)";
             this.txtIdOtomatis.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -428,7 +429,7 @@
             this.bindingNavigatorSeparator2,
             this.bindingNavigatorAddNewItem,
             this.bindingNavigatorDeleteItem});
-            this.bindingNavigator1.Location = new System.Drawing.Point(1057, 66);
+            this.bindingNavigator1.Location = new System.Drawing.Point(1062, 63);
             this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
             this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
             this.bindingNavigator1.MoveNextItem = this.bindingNavigatorMoveNextItem;
