@@ -149,7 +149,7 @@ namespace MedAllergy
                 if (conn.State == ConnectionState.Closed) conn.Open();
                 bool adaYangDisimpan = false;
 
-                // KONDISI 1: SIMPAN MAKANAN BARU (ID Harus Kosong)
+                // KONDISI 1: SIMPAN DATA BARU (Bisa Makanan Saja, Atau Sekaligus Gejala)
                 if (string.IsNullOrEmpty(txtIdOtomatis.Text))
                 {
                     if (string.IsNullOrWhiteSpace(txtNamaMakanan.Text))
@@ -158,6 +158,7 @@ namespace MedAllergy
                         return;
                     }
 
+                    // 1. Simpan Data Makanannya Terlebih Dahulu
                     SqlCommand cmdMak = new SqlCommand("sp_InsertMakanan", conn);
                     cmdMak.CommandType = CommandType.StoredProcedure;
                     cmdMak.Parameters.AddWithValue("@IdUser", idUserLogin);
@@ -165,11 +166,30 @@ namespace MedAllergy
                     cmdMak.Parameters.AddWithValue("@Komposisi", txtKomposisi.Text);
                     cmdMak.Parameters.AddWithValue("@Waktu", dtpWaktu.Value);
                     cmdMak.ExecuteNonQuery();
-                    adaYangDisimpan = true;
 
-                    MessageBox.Show("Data makanan BARU berhasil disimpan!", "Sukses");
+                    // 2. CEK GEJALA: Jika form gejala juga diisi, langsung simpan sekalian!
+                    if (!string.IsNullOrWhiteSpace(txtGejala.Text))
+                    {
+                        // Trik: Ambil ID Makanan yang BARU SAJA dibuat oleh pasien ini
+                        SqlCommand cmdGetId = new SqlCommand("SELECT MAX(id_makanan) FROM catatan_makanan WHERE id_user = @IdUser", conn);
+                        cmdGetId.Parameters.AddWithValue("@IdUser", idUserLogin);
+                        int newIdMakanan = Convert.ToInt32(cmdGetId.ExecuteScalar());
+
+                        // Masukkan gejala menggunakan ID baru tersebut
+                        SqlCommand cmdGej = new SqlCommand("sp_KelolaGejala", conn);
+                        cmdGej.CommandType = CommandType.StoredProcedure;
+                        cmdGej.Parameters.AddWithValue("@Aksi", "INSERT");
+                        cmdGej.Parameters.AddWithValue("@IdMakanan", newIdMakanan);
+                        cmdGej.Parameters.AddWithValue("@Deskripsi", txtGejala.Text);
+                        cmdGej.Parameters.AddWithValue("@Keparahan", string.IsNullOrWhiteSpace(cmbKeparahan.Text) ? "ringan" : cmbKeparahan.Text);
+                        cmdGej.ExecuteNonQuery();
+                    }
+
+                    adaYangDisimpan = true;
+                    MessageBox.Show("Data rekam medis alergi berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                // KONDISI 2: TAMBAH GEJALA KE MAKANAN LAMA (ID Terisi, Tapi Belum Punya Gejala)
+
+                // KONDISI 2: TAMBAH GEJALA KE MAKANAN LAMA (Makanan sudah ada, tapi lupa isi gejala sebelumnya)
                 else if (!string.IsNullOrEmpty(txtIdOtomatis.Text) && !string.IsNullOrWhiteSpace(txtGejala.Text) && idGejalaTerpilih == "0")
                 {
                     SqlCommand cmdGej = new SqlCommand("sp_KelolaGejala", conn);
@@ -181,23 +201,25 @@ namespace MedAllergy
                     cmdGej.ExecuteNonQuery();
                     adaYangDisimpan = true;
 
-                    MessageBox.Show("Gejala berhasil ditambahkan pada makanan tersebut!", "Sukses");
+                    MessageBox.Show("Gejala berhasil ditambahkan pada makanan tersebut!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                // KONDISI 3: SALAH PENCET TOMBOL SAVE PADA DATA LAMA
+
+                // KONDISI 3: SALAH PENCET TOMBOL SAVE PADA DATA LAMA YANG SUDAH LENGKAP
                 else if (!string.IsNullOrEmpty(txtIdOtomatis.Text) && idGejalaTerpilih != "0")
                 {
-                    MessageBox.Show("Tombol 'Save' digunakan untuk MENAMBAH data.\n\n- Jika ingin MENGUBAH data ini, klik 'Update'.\n- Jika ingin MENAMBAH makanan baru, klik 'Clear' (atau tanda +) terlebih dahulu.",
-                                    "Informasi Alur Penggunaan", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Tombol 'Save' digunakan untuk MENAMBAH data baru.\n\n- Jika ingin MENGUBAH data ini, klik 'Update'.\n- Jika ingin MENAMBAH makanan baru, klik 'Clear' (atau tanda +) di tabel terlebih dahulu.",
+                                    "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
+                // Jika berhasil, perbarui tabel dan grafik
                 if (adaYangDisimpan)
                 {
-                    TampilDataRiwayatLengkap("");
-                    LoadGrafikAlergi();
+                    TampilDataRiwayatLengkap(""); // Refresh tabel
+                    LoadGrafikAlergi();           // Refresh grafik
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Gagal Simpan: " + ex.Message); }
+            catch (Exception ex) { MessageBox.Show("Gagal Simpan: " + ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
@@ -237,6 +259,7 @@ namespace MedAllergy
             }
             catch (Exception ex) { MessageBox.Show("Gagal Update: " + ex.Message); }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+            LoadGrafikAlergi();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -260,6 +283,7 @@ namespace MedAllergy
                 }
                 catch (Exception ex) { MessageBox.Show("Gagal Hapus: " + ex.Message); }
                 finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+                LoadGrafikAlergi();
             }
         }
 
@@ -346,6 +370,11 @@ namespace MedAllergy
         }
 
         private void lblUserLogin_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dtpWaktu_ValueChanged(object sender, EventArgs e)
         {
 
         }

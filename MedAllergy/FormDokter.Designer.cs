@@ -92,13 +92,15 @@
             // 
             // btnSimpanDiagnosis
             // 
-            this.btnSimpanDiagnosis.Location = new System.Drawing.Point(442, 227);
+            this.btnSimpanDiagnosis.BackColor = System.Drawing.Color.DarkGray;
+            this.btnSimpanDiagnosis.ForeColor = System.Drawing.Color.White;
+            this.btnSimpanDiagnosis.Location = new System.Drawing.Point(684, 40);
             this.btnSimpanDiagnosis.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSimpanDiagnosis.Name = "btnSimpanDiagnosis";
-            this.btnSimpanDiagnosis.Size = new System.Drawing.Size(182, 44);
+            this.btnSimpanDiagnosis.Size = new System.Drawing.Size(181, 35);
             this.btnSimpanDiagnosis.TabIndex = 3;
             this.btnSimpanDiagnosis.Text = "Simpan Diagnosis";
-            this.btnSimpanDiagnosis.UseVisualStyleBackColor = true;
+            this.btnSimpanDiagnosis.UseVisualStyleBackColor = false;
             this.btnSimpanDiagnosis.Click += new System.EventHandler(this.btnSimpanDiagnosis_Click);
             // 
             // cmbRisiko
@@ -146,7 +148,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox2.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox2.Location = new System.Drawing.Point(299, 110);
             this.textBox2.Name = "textBox2";
@@ -156,7 +158,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox1.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.Location = new System.Drawing.Point(299, 40);
             this.textBox1.Name = "textBox1";
@@ -166,7 +168,7 @@
             // 
             // textBox7
             // 
-            this.textBox7.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox7.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox7.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox7.Location = new System.Drawing.Point(362, 347);
@@ -188,7 +190,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox3.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox3.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox3.Location = new System.Drawing.Point(912, 347);
@@ -210,22 +212,26 @@
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(581, 294);
+            this.btnHapus.BackColor = System.Drawing.Color.DarkGray;
+            this.btnHapus.ForeColor = System.Drawing.Color.White;
+            this.btnHapus.Location = new System.Drawing.Point(684, 83);
             this.btnHapus.Name = "btnHapus";
-            this.btnHapus.Size = new System.Drawing.Size(85, 26);
+            this.btnHapus.Size = new System.Drawing.Size(181, 36);
             this.btnHapus.TabIndex = 31;
-            this.btnHapus.Text = "Delete";
-            this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.Text = "Hapus Diagnosis";
+            this.btnHapus.UseVisualStyleBackColor = false;
             this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(581, 335);
+            this.btnUpdate.BackColor = System.Drawing.Color.DarkGray;
+            this.btnUpdate.ForeColor = System.Drawing.Color.White;
+            this.btnUpdate.Location = new System.Drawing.Point(684, 125);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(85, 26);
+            this.btnUpdate.Size = new System.Drawing.Size(181, 37);
             this.btnUpdate.TabIndex = 32;
-            this.btnUpdate.Text = "Update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Text = "Perbarui Diagnosis";
+            this.btnUpdate.UseVisualStyleBackColor = false;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // txtIdDiagnosis
@@ -258,6 +264,7 @@
             this.Controls.Add(this.dgvRiwayatPasien);
             this.Controls.Add(this.cmbPasien);
             this.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.White;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FormDokter";
