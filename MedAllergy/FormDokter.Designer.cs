@@ -56,7 +56,7 @@
             // cmbPasien
             // 
             this.cmbPasien.FormattingEnabled = true;
-            this.cmbPasien.Location = new System.Drawing.Point(442, 40);
+            this.cmbPasien.Location = new System.Drawing.Point(403, 40);
             this.cmbPasien.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbPasien.Name = "cmbPasien";
             this.cmbPasien.Size = new System.Drawing.Size(143, 33);
@@ -68,7 +68,7 @@
             this.dgvRiwayatPasien.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.dgvRiwayatPasien.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvRiwayatPasien.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRiwayatPasien.Location = new System.Drawing.Point(299, 382);
+            this.dgvRiwayatPasien.Location = new System.Drawing.Point(252, 382);
             this.dgvRiwayatPasien.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgvRiwayatPasien.Name = "dgvRiwayatPasien";
             this.dgvRiwayatPasien.ReadOnly = true;
@@ -76,7 +76,7 @@
             this.dgvRiwayatPasien.RowHeadersWidth = 51;
             this.dgvRiwayatPasien.RowTemplate.Height = 24;
             this.dgvRiwayatPasien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRiwayatPasien.Size = new System.Drawing.Size(540, 301);
+            this.dgvRiwayatPasien.Size = new System.Drawing.Size(587, 301);
             this.dgvRiwayatPasien.TabIndex = 1;
             // 
             // txtHasilDiagnosis
@@ -94,7 +94,7 @@
             // 
             this.btnSimpanDiagnosis.BackColor = System.Drawing.Color.DarkGray;
             this.btnSimpanDiagnosis.ForeColor = System.Drawing.Color.White;
-            this.btnSimpanDiagnosis.Location = new System.Drawing.Point(684, 40);
+            this.btnSimpanDiagnosis.Location = new System.Drawing.Point(585, 38);
             this.btnSimpanDiagnosis.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSimpanDiagnosis.Name = "btnSimpanDiagnosis";
             this.btnSimpanDiagnosis.Size = new System.Drawing.Size(181, 35);
@@ -106,7 +106,7 @@
             // cmbRisiko
             // 
             this.cmbRisiko.FormattingEnabled = true;
-            this.cmbRisiko.Location = new System.Drawing.Point(442, 105);
+            this.cmbRisiko.Location = new System.Drawing.Point(403, 102);
             this.cmbRisiko.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbRisiko.Name = "cmbRisiko";
             this.cmbRisiko.Size = new System.Drawing.Size(143, 33);
@@ -114,23 +114,23 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.SteelBlue;
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(289, 696);
+            this.panel1.Size = new System.Drawing.Size(242, 696);
             this.panel1.TabIndex = 5;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(23, 120);
+            this.pictureBox1.Location = new System.Drawing.Point(13, 23);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(77, 70);
+            this.pictureBox1.Size = new System.Drawing.Size(71, 57);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 19;
             this.pictureBox1.TabStop = false;
@@ -138,8 +138,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(119, 148);
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(100, 39);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(131, 25);
@@ -150,7 +150,7 @@
             // 
             this.textBox2.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Location = new System.Drawing.Point(299, 110);
+            this.textBox2.Location = new System.Drawing.Point(257, 107);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(130, 24);
             this.textBox2.TabIndex = 21;
@@ -160,7 +160,7 @@
             // 
             this.textBox1.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(299, 40);
+            this.textBox1.Location = new System.Drawing.Point(260, 40);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(112, 24);
             this.textBox1.TabIndex = 22;
@@ -171,7 +171,7 @@
             this.textBox7.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox7.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox7.Location = new System.Drawing.Point(362, 347);
+            this.textBox7.Location = new System.Drawing.Point(319, 347);
             this.textBox7.Multiline = true;
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(168, 27);
@@ -181,7 +181,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(298, 326);
+            this.pictureBox2.Location = new System.Drawing.Point(255, 326);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(58, 48);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -214,7 +214,7 @@
             // 
             this.btnHapus.BackColor = System.Drawing.Color.DarkGray;
             this.btnHapus.ForeColor = System.Drawing.Color.White;
-            this.btnHapus.Location = new System.Drawing.Point(684, 83);
+            this.btnHapus.Location = new System.Drawing.Point(585, 81);
             this.btnHapus.Name = "btnHapus";
             this.btnHapus.Size = new System.Drawing.Size(181, 36);
             this.btnHapus.TabIndex = 31;
@@ -226,7 +226,7 @@
             // 
             this.btnUpdate.BackColor = System.Drawing.Color.DarkGray;
             this.btnUpdate.ForeColor = System.Drawing.Color.White;
-            this.btnUpdate.Location = new System.Drawing.Point(684, 125);
+            this.btnUpdate.Location = new System.Drawing.Point(585, 123);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(181, 37);
             this.btnUpdate.TabIndex = 32;

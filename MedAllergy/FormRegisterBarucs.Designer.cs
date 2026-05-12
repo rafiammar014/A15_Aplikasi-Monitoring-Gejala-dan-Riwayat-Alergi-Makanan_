@@ -41,30 +41,30 @@
             // 
             // txtNamaBaru
             // 
-            this.txtNamaBaru.Location = new System.Drawing.Point(268, 179);
+            this.txtNamaBaru.Location = new System.Drawing.Point(265, 197);
             this.txtNamaBaru.Name = "txtNamaBaru";
-            this.txtNamaBaru.Size = new System.Drawing.Size(143, 22);
+            this.txtNamaBaru.Size = new System.Drawing.Size(185, 22);
             this.txtNamaBaru.TabIndex = 0;
             // 
             // txtEmailBaru
             // 
-            this.txtEmailBaru.Location = new System.Drawing.Point(268, 236);
+            this.txtEmailBaru.Location = new System.Drawing.Point(264, 255);
             this.txtEmailBaru.Name = "txtEmailBaru";
-            this.txtEmailBaru.Size = new System.Drawing.Size(143, 22);
+            this.txtEmailBaru.Size = new System.Drawing.Size(185, 22);
             this.txtEmailBaru.TabIndex = 1;
             // 
             // txtPassBaru
             // 
-            this.txtPassBaru.Location = new System.Drawing.Point(268, 292);
+            this.txtPassBaru.Location = new System.Drawing.Point(264, 318);
             this.txtPassBaru.Name = "txtPassBaru";
-            this.txtPassBaru.Size = new System.Drawing.Size(143, 22);
+            this.txtPassBaru.Size = new System.Drawing.Size(185, 22);
             this.txtPassBaru.TabIndex = 2;
             // 
             // brnSimpan
             // 
             this.brnSimpan.BackColor = System.Drawing.Color.DarkGray;
             this.brnSimpan.ForeColor = System.Drawing.Color.White;
-            this.brnSimpan.Location = new System.Drawing.Point(290, 347);
+            this.brnSimpan.Location = new System.Drawing.Point(314, 364);
             this.brnSimpan.Name = "brnSimpan";
             this.brnSimpan.Size = new System.Drawing.Size(94, 32);
             this.brnSimpan.TabIndex = 3;
@@ -98,7 +98,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(267, 157);
+            this.label1.Location = new System.Drawing.Point(264, 174);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(88, 20);
             this.label1.TabIndex = 33;
@@ -108,7 +108,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(268, 213);
+            this.label3.Location = new System.Drawing.Point(266, 232);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(84, 20);
             this.label3.TabIndex = 34;
@@ -118,7 +118,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(268, 269);
+            this.label4.Location = new System.Drawing.Point(266, 294);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(113, 20);
             this.label4.TabIndex = 35;

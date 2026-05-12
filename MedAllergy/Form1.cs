@@ -57,7 +57,6 @@ namespace MedAllergy
             catch { }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
-
         private void TampilDataRiwayatLengkap(string keyword)
         {
             try
@@ -86,24 +85,55 @@ namespace MedAllergy
                     // Pastikan Anda sudah menambahkan BindingNavigator di layar desain dengan nama bindingNavigator1
                     if (bindingNavigator1 != null) bindingNavigator1.BindingSource = bsRiwayat;
 
+                    // ========================================================
+                    // STYLING DATAGRIDVIEW RIWAYAT ALERGI
+                    // ========================================================
+
+                    // 1. Menyembunyikan kolom ID yang tidak perlu dilihat pasien
                     if (dgvRiwayatAlergi.Columns.Contains("id_makanan")) dgvRiwayatAlergi.Columns["id_makanan"].Visible = false;
                     if (dgvRiwayatAlergi.Columns.Contains("id_gejala")) dgvRiwayatAlergi.Columns["id_gejala"].Visible = false;
                     if (dgvRiwayatAlergi.Columns.Contains("id_user")) dgvRiwayatAlergi.Columns["id_user"].Visible = false;
 
+                    // 2. Mengatur lebar kolom agar memenuhi layar
+                    dgvRiwayatAlergi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                    // 3. Mengubah nama header (Asumsi nama kolom dari vw_DashboardAlergi)
+                    if (dgvRiwayatAlergi.Columns.Contains("waktu_konsumsi"))
+                        dgvRiwayatAlergi.Columns["waktu_konsumsi"].HeaderText = "Waktu Kejadian";
+                    if (dgvRiwayatAlergi.Columns.Contains("nama_makanan"))
+                        dgvRiwayatAlergi.Columns["nama_makanan"].HeaderText = "Nama Makanan";
+                    if (dgvRiwayatAlergi.Columns.Contains("komposisi"))
+                        dgvRiwayatAlergi.Columns["komposisi"].HeaderText = "Komposisi";
+                    if (dgvRiwayatAlergi.Columns.Contains("deskripsi_gejala"))
+                        dgvRiwayatAlergi.Columns["deskripsi_gejala"].HeaderText = "Gejala yang Muncul";
+
+                    if (dgvRiwayatAlergi.Columns.Contains("tingkat_keparahan"))
+                    {
+                        dgvRiwayatAlergi.Columns["tingkat_keparahan"].HeaderText = "Keparahan";
+                        // Rata tengah khusus untuk kolom keparahan
+                        dgvRiwayatAlergi.Columns["tingkat_keparahan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    }
+
+                    // 4. Membersihkan elemen visual yang tidak perlu
+                    dgvRiwayatAlergi.AllowUserToAddRows = false;
+                    dgvRiwayatAlergi.RowHeadersVisible = false;
+
+                    // 5. Mempercantik baris dan font header
+                    dgvRiwayatAlergi.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+                    dgvRiwayatAlergi.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+
+                    // ========================================================
+
+                    // Update Label Total Data
                     lblTotalData.Text = "Total Data: " + dt.Rows.Count.ToString();
 
-                    // Pastikan pengaturan kolom untuk dgvDiagnosisPasien (bukan dgvDiagnosis)
-                    if (dgvDiagnosisPasien != null)
-                    {
-                        dgvDiagnosisPasien.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                        // Tampilkan ke GridView yang baru kita buat
-                        dgvDiagnosisPasien.DataSource = dt;
-                    }
+                    // Catatan: Kode dgvDiagnosisPasien yang nyasar di sini sudah saya hapus 
+                    // agar tidak merusak tabel diagnosis di bawahnya.
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat diagnosis: " + ex.Message);
+                MessageBox.Show("Gagal memuat riwayat alergi: " + ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

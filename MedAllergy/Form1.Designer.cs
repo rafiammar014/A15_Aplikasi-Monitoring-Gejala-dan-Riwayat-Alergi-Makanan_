@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblUserLogin = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -239,14 +239,14 @@
             this.dgvRiwayatAlergi.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.dgvRiwayatAlergi.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvRiwayatAlergi.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.SteelBlue;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.SteelBlue;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvRiwayatAlergi.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.SteelBlue;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.SteelBlue;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvRiwayatAlergi.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvRiwayatAlergi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRiwayatAlergi.EnableHeadersVisualStyles = false;
             this.dgvRiwayatAlergi.Location = new System.Drawing.Point(14, 484);
@@ -359,14 +359,14 @@
             this.dgvDiagnosisPasien.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.dgvDiagnosisPasien.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvDiagnosisPasien.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDiagnosisPasien.Location = new System.Drawing.Point(928, 318);
+            this.dgvDiagnosisPasien.Location = new System.Drawing.Point(675, 321);
             this.dgvDiagnosisPasien.Name = "dgvDiagnosisPasien";
             this.dgvDiagnosisPasien.ReadOnly = true;
             this.dgvDiagnosisPasien.RowHeadersVisible = false;
             this.dgvDiagnosisPasien.RowHeadersWidth = 51;
             this.dgvDiagnosisPasien.RowTemplate.Height = 24;
-            this.dgvDiagnosisPasien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullColumnSelect;
-            this.dgvDiagnosisPasien.Size = new System.Drawing.Size(412, 154);
+            this.dgvDiagnosisPasien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvDiagnosisPasien.Size = new System.Drawing.Size(665, 154);
             this.dgvDiagnosisPasien.TabIndex = 30;
             // 
             // textBox8
@@ -375,7 +375,7 @@
             this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox8.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox8.Location = new System.Drawing.Point(982, 283);
+            this.textBox8.Location = new System.Drawing.Point(734, 283);
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(94, 24);
             this.textBox8.TabIndex = 31;
@@ -394,7 +394,7 @@
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(928, 270);
+            this.pictureBox3.Location = new System.Drawing.Point(680, 270);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(48, 43);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -529,16 +529,16 @@
             // chartKeparahan
             // 
             this.chartKeparahan.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            chartArea2.Name = "ChartArea1";
-            this.chartKeparahan.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chartKeparahan.Legends.Add(legend2);
-            this.chartKeparahan.Location = new System.Drawing.Point(1007, 96);
+            chartArea1.Name = "ChartArea1";
+            this.chartKeparahan.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chartKeparahan.Legends.Add(legend1);
+            this.chartKeparahan.Location = new System.Drawing.Point(992, 178);
             this.chartKeparahan.Name = "chartKeparahan";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartKeparahan.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartKeparahan.Series.Add(series1);
             this.chartKeparahan.Size = new System.Drawing.Size(349, 136);
             this.chartKeparahan.TabIndex = 34;
             this.chartKeparahan.Text = "chart1";
