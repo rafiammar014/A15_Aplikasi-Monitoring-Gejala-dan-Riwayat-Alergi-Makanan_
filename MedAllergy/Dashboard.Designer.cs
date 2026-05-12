@@ -1,6 +1,6 @@
 ﻿namespace MedAllergy
 {
-    partial class Form1
+    partial class Dashboard
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
@@ -138,11 +138,12 @@
             // 
             this.txtIdOtomatis.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtIdOtomatis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtIdOtomatis.Location = new System.Drawing.Point(934, 66);
+            this.txtIdOtomatis.Location = new System.Drawing.Point(934, 63);
             this.txtIdOtomatis.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtIdOtomatis.Multiline = true;
             this.txtIdOtomatis.Name = "txtIdOtomatis";
             this.txtIdOtomatis.ReadOnly = true;
-            this.txtIdOtomatis.Size = new System.Drawing.Size(124, 30);
+            this.txtIdOtomatis.Size = new System.Drawing.Size(133, 27);
             this.txtIdOtomatis.TabIndex = 1;
             this.txtIdOtomatis.Text = "ID (Otomatis)";
             this.txtIdOtomatis.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -302,7 +303,7 @@
             this.textBox1.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox1.Location = new System.Drawing.Point(7, 89);
+            this.textBox1.Location = new System.Drawing.Point(7, 91);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(138, 23);
             this.textBox1.TabIndex = 19;
@@ -313,7 +314,7 @@
             this.textBox2.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox2.Location = new System.Drawing.Point(7, 129);
+            this.textBox2.Location = new System.Drawing.Point(9, 133);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(104, 23);
             this.textBox2.TabIndex = 20;
@@ -324,7 +325,7 @@
             this.textBox3.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox3.Location = new System.Drawing.Point(9, 170);
+            this.textBox3.Location = new System.Drawing.Point(9, 174);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(104, 23);
             this.textBox3.TabIndex = 21;
@@ -335,7 +336,7 @@
             this.textBox4.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox4.Location = new System.Drawing.Point(7, 213);
+            this.textBox4.Location = new System.Drawing.Point(7, 217);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(159, 23);
             this.textBox4.TabIndex = 24;
@@ -358,14 +359,14 @@
             this.dgvDiagnosisPasien.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.dgvDiagnosisPasien.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvDiagnosisPasien.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDiagnosisPasien.Location = new System.Drawing.Point(928, 318);
+            this.dgvDiagnosisPasien.Location = new System.Drawing.Point(675, 321);
             this.dgvDiagnosisPasien.Name = "dgvDiagnosisPasien";
             this.dgvDiagnosisPasien.ReadOnly = true;
             this.dgvDiagnosisPasien.RowHeadersVisible = false;
             this.dgvDiagnosisPasien.RowHeadersWidth = 51;
             this.dgvDiagnosisPasien.RowTemplate.Height = 24;
-            this.dgvDiagnosisPasien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullColumnSelect;
-            this.dgvDiagnosisPasien.Size = new System.Drawing.Size(412, 154);
+            this.dgvDiagnosisPasien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvDiagnosisPasien.Size = new System.Drawing.Size(665, 154);
             this.dgvDiagnosisPasien.TabIndex = 30;
             // 
             // textBox8
@@ -374,7 +375,7 @@
             this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox8.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.textBox8.Location = new System.Drawing.Point(982, 283);
+            this.textBox8.Location = new System.Drawing.Point(733, 286);
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(94, 24);
             this.textBox8.TabIndex = 31;
@@ -393,7 +394,7 @@
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(928, 270);
+            this.pictureBox3.Location = new System.Drawing.Point(679, 273);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(48, 43);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -428,7 +429,7 @@
             this.bindingNavigatorSeparator2,
             this.bindingNavigatorAddNewItem,
             this.bindingNavigatorDeleteItem});
-            this.bindingNavigator1.Location = new System.Drawing.Point(1057, 66);
+            this.bindingNavigator1.Location = new System.Drawing.Point(1062, 63);
             this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
             this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
             this.bindingNavigator1.MoveNextItem = this.bindingNavigatorMoveNextItem;
@@ -532,8 +533,9 @@
             this.chartKeparahan.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chartKeparahan.Legends.Add(legend2);
-            this.chartKeparahan.Location = new System.Drawing.Point(1007, 96);
+            this.chartKeparahan.Location = new System.Drawing.Point(992, 178);
             this.chartKeparahan.Name = "chartKeparahan";
+            this.chartKeparahan.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SeaGreen;
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";

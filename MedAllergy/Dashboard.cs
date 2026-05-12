@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace MedAllergy
 {
-    public partial class Form1 : Form
+    public partial class Dashboard : Form
     {
         private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
@@ -16,7 +17,7 @@ namespace MedAllergy
         // TUGAS 4 & 5: Membuat Objek BindingSource
         private BindingSource bsRiwayat = new BindingSource();
 
-        public Form1(int idUser)
+        public Dashboard(int idUser)
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
@@ -56,7 +57,6 @@ namespace MedAllergy
             catch { }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
-
         private void TampilDataRiwayatLengkap(string keyword)
         {
             try
@@ -69,29 +69,76 @@ namespace MedAllergy
                     query += " AND (nama_makanan LIKE @Key OR deskripsi_gejala LIKE @Key) ";
                 }
 
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@IdUser", idUserLogin);
-                if (!string.IsNullOrEmpty(keyword)) cmd.Parameters.AddWithValue("@Key", "%" + keyword + "%");
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdUser", idUserLogin);
+                    if (!string.IsNullOrEmpty(keyword)) cmd.Parameters.AddWithValue("@Key", "%" + keyword + "%");
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
 
-                // TUGAS 4 & 5: Menyambungkan Data ke BindingSource & Navigator
-                bsRiwayat.DataSource = dt;
-                dgvRiwayatAlergi.DataSource = bsRiwayat;
-                
-                // Pastikan Anda sudah menambahkan BindingNavigator di layar desain dengan nama bindingNavigator1
-                if (bindingNavigator1 != null) bindingNavigator1.BindingSource = bsRiwayat; 
+                    // TUGAS 4 & 5: Menyambungkan Data ke BindingSource & Navigator
+                    bsRiwayat.DataSource = dt;
+                    dgvRiwayatAlergi.DataSource = bsRiwayat;
 
-                dgvRiwayatAlergi.Columns["id_makanan"].Visible = false;
-                dgvRiwayatAlergi.Columns["id_gejala"].Visible = false;
-                dgvRiwayatAlergi.Columns["id_user"].Visible = false;
+                    // Pastikan Anda sudah menambahkan BindingNavigator di layar desain dengan nama bindingNavigator1
+                    if (bindingNavigator1 != null) bindingNavigator1.BindingSource = bsRiwayat;
 
-                lblTotalData.Text = "Total Data: " + dt.Rows.Count.ToString();
+                    // ========================================================
+                    // STYLING DATAGRIDVIEW RIWAYAT ALERGI
+                    // ========================================================
+
+                    // 1. Menyembunyikan kolom ID yang tidak perlu dilihat pasien
+                    if (dgvRiwayatAlergi.Columns.Contains("id_makanan")) dgvRiwayatAlergi.Columns["id_makanan"].Visible = false;
+                    if (dgvRiwayatAlergi.Columns.Contains("id_gejala")) dgvRiwayatAlergi.Columns["id_gejala"].Visible = false;
+                    if (dgvRiwayatAlergi.Columns.Contains("id_user")) dgvRiwayatAlergi.Columns["id_user"].Visible = false;
+
+                    // 2. Mengatur lebar kolom agar memenuhi layar
+                    dgvRiwayatAlergi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                    // 3. Mengubah nama header (Asumsi nama kolom dari vw_DashboardAlergi)
+                    if (dgvRiwayatAlergi.Columns.Contains("waktu_konsumsi"))
+                        dgvRiwayatAlergi.Columns["waktu_konsumsi"].HeaderText = "Waktu Kejadian";
+                    if (dgvRiwayatAlergi.Columns.Contains("nama_makanan"))
+                        dgvRiwayatAlergi.Columns["nama_makanan"].HeaderText = "Nama Makanan";
+                    if (dgvRiwayatAlergi.Columns.Contains("komposisi"))
+                        dgvRiwayatAlergi.Columns["komposisi"].HeaderText = "Komposisi";
+                    if (dgvRiwayatAlergi.Columns.Contains("deskripsi_gejala"))
+                        dgvRiwayatAlergi.Columns["deskripsi_gejala"].HeaderText = "Gejala yang Muncul";
+
+                    if (dgvRiwayatAlergi.Columns.Contains("tingkat_keparahan"))
+                    {
+                        dgvRiwayatAlergi.Columns["tingkat_keparahan"].HeaderText = "Keparahan";
+                        // Rata tengah khusus untuk kolom keparahan
+                        dgvRiwayatAlergi.Columns["tingkat_keparahan"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    }
+
+                    // 4. Membersihkan elemen visual yang tidak perlu
+                    dgvRiwayatAlergi.AllowUserToAddRows = false;
+                    dgvRiwayatAlergi.RowHeadersVisible = false;
+
+                    // 5. Mempercantik baris dan font header
+                    dgvRiwayatAlergi.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+                    dgvRiwayatAlergi.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+
+                    // ========================================================
+
+                    // Update Label Total Data
+                    lblTotalData.Text = "Total Data: " + dt.Rows.Count.ToString();
+
+                    // Catatan: Kode dgvDiagnosisPasien yang nyasar di sini sudah saya hapus 
+                    // agar tidak merusak tabel diagnosis di bawahnya.
+                }
             }
-            catch (Exception ex) { MessageBox.Show("Error Load DGV: " + ex.Message); }
-            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat riwayat alergi: " + ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open) conn.Close();
+            }
         }
 
         // ====================================================================
@@ -308,16 +355,54 @@ namespace MedAllergy
             try
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
-                string q = "SELECT tanggal_diagnosis, catatan_medis, tingkat_risiko FROM diagnosis_dokter WHERE id_user = @id";
-                SqlCommand cmd = new SqlCommand(q, conn);
-                cmd.Parameters.AddWithValue("@id", idUserLogin);
+
+                // Cari diagnosis yang id_user-nya cocok dengan pasien yang login
+                string query = @"SELECT tanggal_diagnosis, catatan_medis, tingkat_risiko 
+                         FROM diagnosis_dokter 
+                         WHERE id_user = @idPasien
+                         ORDER BY tanggal_diagnosis DESC";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@idPasien", idUserLogin);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable(); da.Fill(dt);
-                
-                // Asumsi nama tabel bawah di layar desain adalah dgvDiagnosisPasien
-                if(dgvDiagnosisPasien != null) dgvDiagnosisPasien.DataSource = dt; 
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                // 1. MASUKKAN DATA KE DATAGRIDVIEW TERLEBIH DAHULU
+                dgvDiagnosisPasien.DataSource = dt;
+
+                // ========================================================
+                // 2. STYLING DATAGRIDVIEW (Dijalankan setelah data masuk)
+                // ========================================================
+
+                // Mengatur lebar kolom agar memenuhi ruang kosong
+                dgvDiagnosisPasien.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                // Mengubah judul header agar lebih ramah dibaca (sesuai query SQL)
+                if (dgvDiagnosisPasien.Columns.Count > 0)
+                {
+                    dgvDiagnosisPasien.Columns["tanggal_diagnosis"].HeaderText = "Tanggal Diagnosis";
+                    dgvDiagnosisPasien.Columns["catatan_medis"].HeaderText = "Catatan Medis";
+                    dgvDiagnosisPasien.Columns["tingkat_risiko"].HeaderText = "Tingkat Risiko";
+
+                    // Membuat teks "Tingkat Risiko" rata tengah agar lebih rapi
+                    dgvDiagnosisPasien.Columns["tingkat_risiko"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                // Membersihkan elemen yang tidak perlu (baris baru & kolom panah kiri)
+                dgvDiagnosisPasien.AllowUserToAddRows = false;
+                dgvDiagnosisPasien.RowHeadersVisible = false;
+
+                // Mempercantik desain tabel (Baris selang-seling & Font Header)
+                dgvDiagnosisPasien.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+                dgvDiagnosisPasien.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat diagnosis: " + ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
