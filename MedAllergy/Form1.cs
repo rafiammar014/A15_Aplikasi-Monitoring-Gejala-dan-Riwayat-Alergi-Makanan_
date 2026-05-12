@@ -7,596 +7,376 @@ namespace MedAllergy
 {
     public partial class Form1 : Form
     {
-        // 1. Inisialisasi Koneksi
         private readonly SqlConnection conn;
-
-        private readonly string connectionString =
-            @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
+        private readonly string connectionString = @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
 
         private int idUserLogin;
+        private string idGejalaTerpilih = "0";
+
+        // TUGAS 4 & 5: Membuat Objek BindingSource
+        private BindingSource bsRiwayat = new BindingSource();
+
         public Form1(int idUser)
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
-            this.idUserLogin = idUser; // Simpan ID dari login
+            this.idUserLogin = idUser;
         }
 
-        // 2. Event Load Form (Menata DataGridView di awal)
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Pengaturan Tabel Makanan
-            dgvMakanan.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvMakanan.MultiSelect = false;
-            dgvMakanan.ReadOnly = true;
-            dgvMakanan.AllowUserToAddRows = false;
-            dgvMakanan.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvMakanan.RowHeadersVisible = false; // Hilangkan panah kiri agar rapi
-            dgvMakanan.CellClick += dgvMakanan_CellClick;
+            TampilUserLogin();
 
-            // Pengaturan Tabel Gejala (jika ada propertinya)
-            if (dgvGejala != null)
-            {
-                dgvGejala.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dgvGejala.MultiSelect = false;
-                dgvGejala.ReadOnly = true;
-                dgvGejala.AllowUserToAddRows = false;
-                dgvGejala.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgvGejala.RowHeadersVisible = false;
-            }
+            // Seting UI DataGridView
+            dgvRiwayatAlergi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvRiwayatAlergi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvRiwayatAlergi.ReadOnly = true;
+            dgvRiwayatAlergi.AllowUserToAddRows = false;
+            dgvRiwayatAlergi.RowHeadersVisible = false;
 
-            // Memuat Semua Data Saat Aplikasi Dibuka (CUKUP PANGGIL 1 KALI SAJA)
-           
-            TampilData();         // Tampil tabel makanan
-            LoadComboMakanan();   // Isi pilihan combobox makanan
-            TampilDataGejala();   // Tampil tabel gejala
+            // Hubungkan BindingSource dengan Event
+            bsRiwayat.CurrentChanged += bsRiwayat_CurrentChanged;
+
+            // Cukup gunakan dua fungsi ini (Manual & Aman)
+            TampilDataRiwayatLengkap("");
             TampilDiagnosisSaya();
+            LoadGrafikAlergi();
         }
 
-        // 3. Method Menampilkan Data Makanan
-        private void TampilData()
+        private void TampilUserLogin()
         {
             try
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
-
-                dgvMakanan.Rows.Clear();
-                dgvMakanan.Columns.Clear();
-
-                dgvMakanan.Columns.Add("id_makanan", "ID");
-                dgvMakanan.Columns.Add("nama_pasien", "Nama Pasien"); // Tambahan Kolom Baru
-                dgvMakanan.Columns.Add("nama_makanan", "Nama Makanan");
-                dgvMakanan.Columns.Add("komposisi", "Komposisi");
-                dgvMakanan.Columns.Add("waktu_konsumsi", "Waktu Konsumsi");
-
-                dgvMakanan.Columns["id_makanan"].Visible = false;
-
-                // Menggunakan JOIN agar nama pasien muncul
-                string query = @"SELECT c.id_makanan, u.nama AS nama_pasien, c.nama_makanan, c.komposisi, c.waktu_konsumsi 
-                         FROM catatan_makanan c
-                         JOIN users u ON c.id_user = u.id_user";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    dgvMakanan.Rows.Add(
-                        reader["id_makanan"].ToString(),
-                        reader["nama_pasien"].ToString(), // Tampilkan data tambahan
-                        reader["nama_makanan"].ToString(),
-                        reader["komposisi"].ToString(),
-                        Convert.ToDateTime(reader["waktu_konsumsi"]).ToString("dd/MM/yyyy HH:mm")
-                    );
-                }
-                reader.Close();
-
-                string queryCount = "SELECT COUNT(*) FROM catatan_makanan";
-                SqlCommand cmdCount = new SqlCommand(queryCount, conn);
-                int total = (int)cmdCount.ExecuteScalar();
-                lblTotalData.Text = "Total Data Tercatat: " + total.ToString();
+                SqlCommand cmd = new SqlCommand("SELECT nama FROM users WHERE id_user = @id", conn);
+                cmd.Parameters.AddWithValue("@id", idUserLogin);
+                object nama = cmd.ExecuteScalar();
+                if (nama != null) lblUserLogin.Text = "Selamat Datang " + nama.ToString();
             }
-    // ... (sisa try catch biarkan sama)
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menampilkan data: " + ex.Message);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open) conn.Close();
-            }
-        }
-
-        private void btnSimpan_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                // 1. Validasi Input Textbox
-                if (string.IsNullOrWhiteSpace(txtNamaPasien.Text))
-                {
-                    MessageBox.Show("Nama Pasien harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNamaPasien.Focus();
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(txtNamaMakanan.Text))
-                {
-                    MessageBox.Show("Nama makanan harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNamaMakanan.Focus();
-                    return;
-                }
-
-                // ==============================================================
-                // TRIK PINTAR 2.0: Cari ID User. Kalau tidak ada, BUAT OTOMATIS!
-                // ==============================================================
-                string namaDiketik = txtNamaPasien.Text.Trim();
-                int idUser = 0;
-
-                string queryCariUser = "SELECT id_user FROM users WHERE nama = @NamaPasien AND role = 'pasien'";
-                SqlCommand cmdCari = new SqlCommand(queryCariUser, conn);
-                cmdCari.Parameters.AddWithValue("@NamaPasien", namaDiketik);
-
-                object resultId = cmdCari.ExecuteScalar();
-
-                if (resultId != null)
-                {
-                    // Pasien SUDAH ADA, ambil ID-nya
-                    idUser = Convert.ToInt32(resultId);
-                }
-                else
-                {
-                    // Pasien BELUM ADA. Buat otomatis secara diam-diam!
-                    // Kita tambahkan angka acak di email agar tidak bentrok (UNIQUE)
-                    string emailDummy = namaDiketik.Replace(" ", "").ToLower() + new Random().Next(1000, 9999) + "@pasien.com";
-
-                    string queryBuatBaru = @"INSERT INTO users (nama, email, password, role) 
-                                             VALUES (@NamaBaru, @EmailDummy, '12345', 'pasien');
-                                             SELECT SCOPE_IDENTITY();"; // Perintah mengambil ID yang baru tercipta
-
-                    SqlCommand cmdBuat = new SqlCommand(queryBuatBaru, conn);
-                    cmdBuat.Parameters.AddWithValue("@NamaBaru", namaDiketik);
-                    cmdBuat.Parameters.AddWithValue("@EmailDummy", emailDummy);
-
-                    // Eksekusi dan langsung ambil ID barunya
-                    idUser = Convert.ToInt32(cmdBuat.ExecuteScalar());
-
-                    // Beritahu dokter/user bahwa pasien baru telah ditambahkan
-                    MessageBox.Show($"Pasien baru bernama '{namaDiketik}' telah otomatis didaftarkan ke sistem!", "Info Pasien Baru", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                // ==============================================================
-
-                // 3. Simpan data Makanan menggunakan idUser (baik yang lama maupun yang baru dibuat)
-                string query = @"INSERT INTO catatan_makanan (id_user, nama_makanan, komposisi, waktu_konsumsi) 
-                                 VALUES (@IdUser, @NamaMakanan, @Komposisi, @Waktu)";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@IdUser", idUser);
-                cmd.Parameters.AddWithValue("@NamaMakanan", txtNamaMakanan.Text);
-                cmd.Parameters.AddWithValue("@Komposisi", txtKomposisi.Text);
-                cmd.Parameters.AddWithValue("@Waktu", dtpWaktu.Value);
-
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
-                {
-                    MessageBox.Show("Data makanan berhasil ditambahkan!", "Sukses");
-                    ClearForm();
-                    txtNamaPasien.Text = "";
-                    TampilData();
-                    LoadComboMakanan();
-                }
-                else
-                {
-                    MessageBox.Show("Data gagal ditambahkan");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
-        }
-        // 5. Implementasi UPDATE Makanan
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (txtIdMakanan.Text == "")
-                {
-                    MessageBox.Show("Pilih data yang akan diupdate dari tabel terlebih dahulu!", "Peringatan");
-                    return;
-                }
-
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                string query = @"UPDATE catatan_makanan 
-                                 SET nama_makanan = @Nama, 
-                                     komposisi = @Komposisi, 
-                                     waktu_konsumsi = @Waktu 
-                                 WHERE id_makanan = @ID";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ID", txtIdMakanan.Text);
-                cmd.Parameters.AddWithValue("@Nama", txtNamaMakanan.Text);
-                cmd.Parameters.AddWithValue("@Komposisi", txtKomposisi.Text);
-                cmd.Parameters.AddWithValue("@Waktu", dtpWaktu.Value);
-
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
-                {
-                    MessageBox.Show("Data berhasil diupdate", "Sukses");
-                    ClearForm();
-                    TampilData();
-                    LoadComboMakanan(); // Refresh daftar pilihan gejala
-                    TampilDataGejala(); // Refresh tabel gejala (karena nama makanan mungkin berubah)
-                }
-                else
-                {
-                    MessageBox.Show("Data tidak ditemukan");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
-            }
+            catch { }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
 
-        // 6. Pembersih Form Makanan
-        private void ClearForm()
-        {
-            txtIdMakanan.Text = "";
-            txtNamaMakanan.Text = "";
-            txtKomposisi.Text = "";
-            dtpWaktu.Value = DateTime.Now;
-        }
-
-        // 7. Implementasi DELETE Makanan
-        private void btnHapus_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (txtIdMakanan.Text == "" || txtIdMakanan.Text == "ID (Otomatis)")
-                {
-                    MessageBox.Show("Pilih data yang akan dihapus dari tabel terlebih dahulu!", "Peringatan");
-                    return;
-                }
-
-                DialogResult resultConfirm = MessageBox.Show(
-                    "Yakin ingin menghapus data makanan ini?",
-                    "Konfirmasi",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (resultConfirm == DialogResult.Yes)
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    string query = "DELETE FROM catatan_makanan WHERE id_makanan = @ID";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@ID", txtIdMakanan.Text);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                    {
-                        MessageBox.Show("Data berhasil dihapus", "Sukses");
-                        ClearForm();
-                        TampilData();
-                        LoadComboMakanan(); // Refresh daftar pilihan gejala
-                        TampilDataGejala(); // Refresh tabel gejala
-                    }
-                    else
-                    {
-                        MessageBox.Show("Data tidak ditemukan");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open) conn.Close();
-            }
-        }
-
-        private void dgvMakanan_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // 1. Abaikan jika yang diklik adalah bagian judul kolom (header)
-            if (e.RowIndex < 0) return;
-
-            // 2. Ambil baris data yang sedang diklik
-            DataGridViewRow row = dgvMakanan.Rows[e.RowIndex];
-
-            // 3. Pindahkan nilai dari tabel ke form input dengan aman
-            if (row.Cells["id_makanan"].Value != null)
-            {
-                txtIdMakanan.Text = row.Cells["id_makanan"].Value.ToString();
-                txtNamaMakanan.Text = row.Cells["nama_makanan"].Value.ToString();
-                txtKomposisi.Text = row.Cells["komposisi"].Value.ToString();
-
-                // 4. Khusus untuk waktu, ubah teks menjadi format penanggalan
-                if (DateTime.TryParse(row.Cells["waktu_konsumsi"].Value.ToString(), out DateTime waktu))
-                {
-                    dtpWaktu.Value = waktu;
-                }
-                else
-                {
-                    dtpWaktu.Value = DateTime.Now;
-                }
-            }
-        }
-
-        private void btnResetID_Click(object sender, EventArgs e)
-        {
-            DialogResult dialog = MessageBox.Show(
-                "PERINGATAN: Tindakan ini akan MENGHAPUS SELURUH DATA MAKANAN (dan gejala terkait) Anda dan mereset ID kembali ke angka 1. Apakah Anda yakin ingin melanjutkan?",
-                "Konfirmasi Reset Keseluruhan",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
-
-            if (dialog == DialogResult.Yes)
-            {
-                try
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    string queryHapusGejala = "DELETE FROM gejala_alergi";
-                    SqlCommand cmdHapusGejala = new SqlCommand(queryHapusGejala, conn);
-                    cmdHapusGejala.ExecuteNonQuery();
-
-                    string queryHapusMakanan = "DELETE FROM catatan_makanan";
-                    SqlCommand cmdHapusMakanan = new SqlCommand(queryHapusMakanan, conn);
-                    cmdHapusMakanan.ExecuteNonQuery();
-
-                    string queryResetID = "DBCC CHECKIDENT ('catatan_makanan', RESEED, 0)";
-                    SqlCommand cmdResetID = new SqlCommand(queryResetID, conn);
-                    cmdResetID.ExecuteNonQuery();
-
-                    MessageBox.Show("Semua data berhasil dihapus dan urutan ID telah direset ke 1.", "Reset Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    ClearForm();
-                    TampilData();
-                    LoadComboMakanan();
-                    TampilDataGejala();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal mereset: " + ex.Message);
-                }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-            }
-        }
-
-        // ==========================================================
-        // FUNGSI GEJALA ALERGI (MASTER-DETAIL)
-        // ==========================================================
-
-        private void LoadComboMakanan()
-        {
-            try
-            {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-                string query = "SELECT id_makanan, nama_makanan FROM catatan_makanan";
-                SqlCommand cmdCombo = new SqlCommand(query, conn);
-                SqlDataAdapter da = new SqlDataAdapter(cmdCombo);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                cmbMakanan.DataSource = dt;
-                cmbMakanan.DisplayMember = "nama_makanan"; // Yang dibaca oleh user
-                cmbMakanan.ValueMember = "id_makanan";     // ID yang disimpan sistem
-                cmbMakanan.SelectedIndex = -1;             // Kosongkan pilihan saat awal
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error load combo: " + ex.Message);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open) conn.Close();
-            }
-        }
-
-        private void TampilDataGejala()
+        private void TampilDataRiwayatLengkap(string keyword)
         {
             try
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                dgvGejala.Rows.Clear();
-                dgvGejala.Columns.Clear();
-
-                dgvGejala.Columns.Add("id_gejala", "ID Gejala");
-                dgvGejala.Columns.Add("nama_pasien", "Nama Pasien");
-                dgvGejala.Columns.Add("nama_makanan", "Pemicu (Makanan)");
-                dgvGejala.Columns.Add("deskripsi_gejala", "Gejala");
-                dgvGejala.Columns.Add("tingkat_keparahan", "Keparahan");
-                dgvGejala.Columns.Add("waktu_muncul", "Waktu Gejala");
-
-                dgvGejala.Columns["id_gejala"].Visible = false;
-
-                string query = @"SELECT g.id_gejala, u.nama AS nama_pasien, c.nama_makanan, g.deskripsi_gejala, g.tingkat_keparahan, g.waktu_muncul
-                                 FROM gejala_alergi g
-                                 JOIN catatan_makanan c ON g.id_makanan = c.id_makanan
-                                 JOIN users u ON c.id_user = u.id_user";
-
-                SqlCommand cmdG = new SqlCommand(query, conn);
-                SqlDataReader drG = cmdG.ExecuteReader();
-
-                while (drG.Read())
+                string query = @"SELECT * FROM vw_DashboardAlergi WHERE id_user = @IdUser ";
+                if (!string.IsNullOrEmpty(keyword))
                 {
-                    dgvGejala.Rows.Add(
-                        drG["id_gejala"].ToString(),
-                        drG["nama_pasien"].ToString(),
-                        drG["nama_makanan"].ToString(),
-                        drG["deskripsi_gejala"].ToString(),
-                        drG["tingkat_keparahan"].ToString(),
-                        Convert.ToDateTime(drG["waktu_muncul"]).ToString("dd/MM/yyyy HH:mm")
-                    );
+                    query += " AND (nama_makanan LIKE @Key OR deskripsi_gejala LIKE @Key) ";
                 }
-                drG.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Gagal menampilkan tabel gejala: " + ex.Message);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open) conn.Close();
-            }
-        }
-
-        private void btnSimpanGejala_Click(object sender, EventArgs e)
-        {
-            // Validasi: Pastikan user sudah memilih makanan dari combobox
-            if (cmbMakanan.SelectedValue == null)
-            {
-                MessageBox.Show("Pilih makanan pemicu terlebih dahulu dari dropdown!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtGejala.Text))
-            {
-                MessageBox.Show("Deskripsi gejala harus diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                string query = @"INSERT INTO gejala_alergi (id_makanan, deskripsi_gejala, tingkat_keparahan, waktu_muncul) 
-                                 VALUES (@IdMakanan, @Gejala, @Keparahan, @Waktu)";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@IdMakanan", cmbMakanan.SelectedValue);
-                cmd.Parameters.AddWithValue("@Gejala", txtGejala.Text);
-
-                // Cek apakah combobox keparahan dipilih, jika kosong default ke 'ringan'
-                string keparahan = string.IsNullOrWhiteSpace(cmbKeparahan.Text) ? "ringan" : cmbKeparahan.Text.ToLower();
-                cmd.Parameters.AddWithValue("@Keparahan", keparahan);
-
-                cmd.Parameters.AddWithValue("@Waktu", dtpWaktuGejala.Value);
-
-                int result = cmd.ExecuteNonQuery();
-                if (result > 0)
-                {
-                    MessageBox.Show("Gejala berhasil dicatat!", "Sukses");
-                    txtGejala.Clear();
-                    cmbKeparahan.SelectedIndex = -1;
-                    dtpWaktuGejala.Value = DateTime.Now;
-                    TampilDataGejala(); // Refresh tabel gejala
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menyimpan gejala: " + ex.Message);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open) conn.Close();
-            }
-        }
-
-        // ==========================================================
-        // EVENT KOSONG BAWAAN DESIGNER (Biarkan Saja)
-        // ==========================================================
-        private void dgvMakanan_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        private void lblTotalData_Click(object sender, EventArgs e) { }
-        private void txtNamaMakanan_TextChanged(object sender, EventArgs e) { }
-        private void cmbMakanan_SelectedIndexChanged(object sender, EventArgs e) { }
-        private void dtpWaktuGejala_ValueChanged(object sender, EventArgs e) { }
-        private void cmbKeparahan_SelectedIndexChanged(object sender, EventArgs e) { }
-        private void dgvGejala_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-
-        private void btnHapusGejala_Click(object sender, EventArgs e)
-        {
-            // 1. Validasi: Pastikan pengguna sudah mengklik/memilih baris di tabel gejala
-            if (dgvGejala.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Silakan klik baris data gejala yang ingin dihapus pada tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // 2. Ambil ID Gejala yang tersembunyi dari baris yang diklik
-            string idGejalaTerpilih = dgvGejala.SelectedRows[0].Cells["id_gejala"].Value.ToString();
-
-            // 3. Konfirmasi sebelum menghapus
-            DialogResult dialog = MessageBox.Show(
-                "Apakah Anda yakin ingin menghapus data gejala ini?",
-                "Konfirmasi Hapus",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (dialog == DialogResult.Yes)
-            {
-                try
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    string query = "DELETE FROM gejala_alergi WHERE id_gejala = @IdGejala";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@IdGejala", idGejalaTerpilih);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                    {
-                        MessageBox.Show("Data gejala berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        TampilDataGejala(); // Refresh tabel gejala agar data yang dihapus langsung hilang
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Gagal menghapus gejala: " + ex.Message);
-                }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
-                }
-            }
-        }
-        private void TampilDiagnosisSaya()
-        {
-            try
-            {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                // Cari diagnosis yang id_user-nya cocok dengan pasien yang login
-                string query = @"SELECT tanggal_diagnosis, catatan_medis, tingkat_risiko 
-                         FROM diagnosis_dokter 
-                         WHERE id_user = @idPasien
-                         ORDER BY tanggal_diagnosis DESC";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@idPasien", idUserLogin);
+                cmd.Parameters.AddWithValue("@IdUser", idUserLogin);
+                if (!string.IsNullOrEmpty(keyword)) cmd.Parameters.AddWithValue("@Key", "%" + keyword + "%");
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                // Tampilkan ke GridView yang baru kita buat
-                dgvDiagnosisPasien.DataSource = dt;
+                // TUGAS 4 & 5: Menyambungkan Data ke BindingSource & Navigator
+                bsRiwayat.DataSource = dt;
+                dgvRiwayatAlergi.DataSource = bsRiwayat;
+                
+                // Pastikan Anda sudah menambahkan BindingNavigator di layar desain dengan nama bindingNavigator1
+                if (bindingNavigator1 != null) bindingNavigator1.BindingSource = bsRiwayat; 
+
+                dgvRiwayatAlergi.Columns["id_makanan"].Visible = false;
+                dgvRiwayatAlergi.Columns["id_gejala"].Visible = false;
+                dgvRiwayatAlergi.Columns["id_user"].Visible = false;
+
+                lblTotalData.Text = "Total Data: " + dt.Rows.Count.ToString();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal memuat diagnosis: " + ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show("Error Load DGV: " + ex.Message); }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
         }
-        private void pictureBox1_Click(object sender, EventArgs e)
+
+        // ====================================================================
+        // EVENT BINDING: Pengganti CellClick yang merespons Navigator
+        // ====================================================================
+        private void bsRiwayat_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bsRiwayat.Current != null)
+            {
+                DataRowView row = (DataRowView)bsRiwayat.Current;
+
+                // MENCEGAH ERROR & MERESET FORM JIKA TOMBOL (+) DITEKAN
+                if (row.IsNew || string.IsNullOrEmpty(row["id_makanan"].ToString()))
+                {
+                    txtIdOtomatis.Text = "";
+                    idGejalaTerpilih = "0";
+                    txtNamaMakanan.Text = "";
+                    txtKomposisi.Text = "";
+                    dtpWaktu.Value = DateTime.Now;
+                    txtGejala.Text = "";
+                    cmbKeparahan.SelectedIndex = -1;
+                    return; // Hentikan proses di sini
+                }
+
+                // Jika mengklik data lama, isi form seperti biasa
+                txtIdOtomatis.Text = row["id_makanan"].ToString();
+                txtNamaMakanan.Text = row["nama_makanan"].ToString();
+                txtKomposisi.Text = row["komposisi"].ToString();
+                if (DateTime.TryParse(row["waktu_konsumsi"].ToString(), out DateTime wkt)) dtpWaktu.Value = wkt;
+
+                idGejalaTerpilih = row["id_gejala"].ToString();
+                string deskripsi = row["deskripsi_gejala"].ToString();
+
+                if (deskripsi != "-") // Jika sudah ada gejala
+                {
+                    txtGejala.Text = deskripsi;
+                    cmbKeparahan.Text = row["tingkat_keparahan"].ToString();
+                }
+                else // Jika belum ada gejala
+                {
+                    txtGejala.Text = "";
+                    cmbKeparahan.SelectedIndex = -1;
+                }
+            }
+        }
+
+        // ====================================================================
+        // LOGIKA TOMBOL (Terhubung Otomatis tanpa cmbPemicu)
+        // ====================================================================
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                bool adaYangDisimpan = false;
+
+                // KONDISI 1: SIMPAN DATA BARU (Bisa Makanan Saja, Atau Sekaligus Gejala)
+                if (string.IsNullOrEmpty(txtIdOtomatis.Text))
+                {
+                    if (string.IsNullOrWhiteSpace(txtNamaMakanan.Text))
+                    {
+                        MessageBox.Show("Nama makanan wajib diisi untuk menyimpan data baru!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // 1. Simpan Data Makanannya Terlebih Dahulu
+                    SqlCommand cmdMak = new SqlCommand("sp_InsertMakanan", conn);
+                    cmdMak.CommandType = CommandType.StoredProcedure;
+                    cmdMak.Parameters.AddWithValue("@IdUser", idUserLogin);
+                    cmdMak.Parameters.AddWithValue("@NamaMakanan", txtNamaMakanan.Text);
+                    cmdMak.Parameters.AddWithValue("@Komposisi", txtKomposisi.Text);
+                    cmdMak.Parameters.AddWithValue("@Waktu", dtpWaktu.Value);
+                    cmdMak.ExecuteNonQuery();
+
+                    // 2. CEK GEJALA: Jika form gejala juga diisi, langsung simpan sekalian!
+                    if (!string.IsNullOrWhiteSpace(txtGejala.Text))
+                    {
+                        // Trik: Ambil ID Makanan yang BARU SAJA dibuat oleh pasien ini
+                        SqlCommand cmdGetId = new SqlCommand("SELECT MAX(id_makanan) FROM catatan_makanan WHERE id_user = @IdUser", conn);
+                        cmdGetId.Parameters.AddWithValue("@IdUser", idUserLogin);
+                        int newIdMakanan = Convert.ToInt32(cmdGetId.ExecuteScalar());
+
+                        // Masukkan gejala menggunakan ID baru tersebut
+                        SqlCommand cmdGej = new SqlCommand("sp_KelolaGejala", conn);
+                        cmdGej.CommandType = CommandType.StoredProcedure;
+                        cmdGej.Parameters.AddWithValue("@Aksi", "INSERT");
+                        cmdGej.Parameters.AddWithValue("@IdMakanan", newIdMakanan);
+                        cmdGej.Parameters.AddWithValue("@Deskripsi", txtGejala.Text);
+                        cmdGej.Parameters.AddWithValue("@Keparahan", string.IsNullOrWhiteSpace(cmbKeparahan.Text) ? "ringan" : cmbKeparahan.Text);
+                        cmdGej.ExecuteNonQuery();
+                    }
+
+                    adaYangDisimpan = true;
+                    MessageBox.Show("Data rekam medis alergi berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                // KONDISI 2: TAMBAH GEJALA KE MAKANAN LAMA (Makanan sudah ada, tapi lupa isi gejala sebelumnya)
+                else if (!string.IsNullOrEmpty(txtIdOtomatis.Text) && !string.IsNullOrWhiteSpace(txtGejala.Text) && idGejalaTerpilih == "0")
+                {
+                    SqlCommand cmdGej = new SqlCommand("sp_KelolaGejala", conn);
+                    cmdGej.CommandType = CommandType.StoredProcedure;
+                    cmdGej.Parameters.AddWithValue("@Aksi", "INSERT");
+                    cmdGej.Parameters.AddWithValue("@IdMakanan", txtIdOtomatis.Text);
+                    cmdGej.Parameters.AddWithValue("@Deskripsi", txtGejala.Text);
+                    cmdGej.Parameters.AddWithValue("@Keparahan", string.IsNullOrWhiteSpace(cmbKeparahan.Text) ? "ringan" : cmbKeparahan.Text);
+                    cmdGej.ExecuteNonQuery();
+                    adaYangDisimpan = true;
+
+                    MessageBox.Show("Gejala berhasil ditambahkan pada makanan tersebut!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                // KONDISI 3: SALAH PENCET TOMBOL SAVE PADA DATA LAMA YANG SUDAH LENGKAP
+                else if (!string.IsNullOrEmpty(txtIdOtomatis.Text) && idGejalaTerpilih != "0")
+                {
+                    MessageBox.Show("Tombol 'Save' digunakan untuk MENAMBAH data baru.\n\n- Jika ingin MENGUBAH data ini, klik 'Update'.\n- Jika ingin MENAMBAH makanan baru, klik 'Clear' (atau tanda +) di tabel terlebih dahulu.",
+                                    "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Jika berhasil, perbarui tabel dan grafik
+                if (adaYangDisimpan)
+                {
+                    TampilDataRiwayatLengkap(""); // Refresh tabel
+                    LoadGrafikAlergi();           // Refresh grafik
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Gagal Simpan: " + ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                // 1. UPDATE MAKANAN (Kiri)
+                if (!string.IsNullOrEmpty(txtIdOtomatis.Text))
+                {
+                    SqlCommand cmdMak = new SqlCommand("sp_UpdateMakanan", conn);
+                    cmdMak.CommandType = CommandType.StoredProcedure;
+                    cmdMak.Parameters.AddWithValue("@IdMakanan", txtIdOtomatis.Text);
+                    cmdMak.Parameters.AddWithValue("@NamaMakanan", txtNamaMakanan.Text);
+                    cmdMak.Parameters.AddWithValue("@Komposisi", txtKomposisi.Text);
+                    cmdMak.Parameters.AddWithValue("@Waktu", dtpWaktu.Value);
+                    cmdMak.ExecuteNonQuery();
+                }
+
+                // 2. UPDATE GEJALA (Kanan)
+                if (idGejalaTerpilih != "0" && !string.IsNullOrWhiteSpace(txtGejala.Text))
+                {
+                    SqlCommand cmdGej = new SqlCommand("sp_KelolaGejala", conn);
+                    cmdGej.CommandType = CommandType.StoredProcedure;
+                    cmdGej.Parameters.AddWithValue("@Aksi", "UPDATE");
+                    cmdGej.Parameters.AddWithValue("@IdGejala", idGejalaTerpilih);
+                    cmdGej.Parameters.AddWithValue("@IdMakanan", txtIdOtomatis.Text); // Ambil dari ID text box
+                    cmdGej.Parameters.AddWithValue("@Deskripsi", txtGejala.Text);
+                    cmdGej.Parameters.AddWithValue("@Keparahan", cmbKeparahan.Text);
+                    cmdGej.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("Data berhasil diperbarui!", "Sukses");
+                TampilDataRiwayatLengkap("");
+            }
+            catch (Exception ex) { MessageBox.Show("Gagal Update: " + ex.Message); }
+            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+            LoadGrafikAlergi();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtIdOtomatis.Text)) { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
+
+            if (MessageBox.Show("Yakin hapus data ini? Transaksi ini akan menghapus Makanan dan Gejala sekaligus.", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                try
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_DeleteMakanan", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdMakanan", txtIdOtomatis.Text);
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Data berhasil dihapus!");
+                    btnClear_Click(null, null);
+                    TampilDataRiwayatLengkap("");
+                }
+                catch (Exception ex) { MessageBox.Show("Gagal Hapus: " + ex.Message); }
+                finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+                LoadGrafikAlergi();
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            // Melepas seleksi dari binding navigator agar form benar-benar kosong
+            bsRiwayat.Position = -1; 
+            
+            txtIdOtomatis.Text = "";
+            idGejalaTerpilih = "0";
+
+            txtNamaMakanan.Text = "";
+            txtKomposisi.Text = "";
+            dtpWaktu.Value = DateTime.Now;
+
+            txtGejala.Text = "";
+            cmbKeparahan.SelectedIndex = -1;
+        }
+
+        private void TampilDiagnosisSaya()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                string q = "SELECT tanggal_diagnosis, catatan_medis, tingkat_risiko FROM diagnosis_dokter WHERE id_user = @id";
+                SqlCommand cmd = new SqlCommand(q, conn);
+                cmd.Parameters.AddWithValue("@id", idUserLogin);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable(); da.Fill(dt);
+                
+                // Asumsi nama tabel bawah di layar desain adalah dgvDiagnosisPasien
+                if(dgvDiagnosisPasien != null) dgvDiagnosisPasien.DataSource = dt; 
+            }
+            catch { }
+            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
         {
 
         }
 
+
+        private void LoadGrafikAlergi()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                // Menghitung jumlah riwayat berdasarkan tingkat keparahannya
+                string query = @"SELECT tingkat_keparahan, COUNT(id_gejala) as jumlah 
+                         FROM vw_DashboardAlergi 
+                         WHERE id_user = @IdUser AND tingkat_keparahan != '-'
+                         GROUP BY tingkat_keparahan";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@IdUser", idUserLogin);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                // Reset chart sebelum diisi
+                chartKeparahan.Series.Clear();
+                chartKeparahan.Series.Add("Keparahan");
+                // Mengubah bentuk chart menjadi Pie (Lingkaran)
+                chartKeparahan.Series["Keparahan"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+
+                while (reader.Read())
+                {
+                    string tingkat = reader["tingkat_keparahan"].ToString();
+                    int jumlah = Convert.ToInt32(reader["jumlah"]);
+
+                    // Tambahkan data ke dalam grafik
+                    chartKeparahan.Series["Keparahan"].Points.AddXY(tingkat, jumlah);
+                }
+                reader.Close();
+            }
+            catch { /* Biarkan kosong jika grafik gagal dimuat */ }
+            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+        }
+
+        private void chartKeparahan_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblUserLogin_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dtpWaktu_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
+}

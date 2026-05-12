@@ -43,6 +43,9 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.btnHapus = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.txtIdDiagnosis = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRiwayatPasien)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -53,7 +56,7 @@
             // cmbPasien
             // 
             this.cmbPasien.FormattingEnabled = true;
-            this.cmbPasien.Location = new System.Drawing.Point(442, 88);
+            this.cmbPasien.Location = new System.Drawing.Point(442, 40);
             this.cmbPasien.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbPasien.Name = "cmbPasien";
             this.cmbPasien.Size = new System.Drawing.Size(143, 33);
@@ -79,29 +82,31 @@
             // txtHasilDiagnosis
             // 
             this.txtHasilDiagnosis.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.txtHasilDiagnosis.Location = new System.Drawing.Point(847, 382);
+            this.txtHasilDiagnosis.Location = new System.Drawing.Point(849, 382);
             this.txtHasilDiagnosis.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtHasilDiagnosis.Multiline = true;
             this.txtHasilDiagnosis.Name = "txtHasilDiagnosis";
-            this.txtHasilDiagnosis.Size = new System.Drawing.Size(387, 231);
+            this.txtHasilDiagnosis.Size = new System.Drawing.Size(387, 300);
             this.txtHasilDiagnosis.TabIndex = 2;
             this.txtHasilDiagnosis.TextChanged += new System.EventHandler(this.txtHasilDiagnosis_TextChanged_1);
             // 
             // btnSimpanDiagnosis
             // 
-            this.btnSimpanDiagnosis.Location = new System.Drawing.Point(1052, 638);
+            this.btnSimpanDiagnosis.BackColor = System.Drawing.Color.DarkGray;
+            this.btnSimpanDiagnosis.ForeColor = System.Drawing.Color.White;
+            this.btnSimpanDiagnosis.Location = new System.Drawing.Point(684, 40);
             this.btnSimpanDiagnosis.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSimpanDiagnosis.Name = "btnSimpanDiagnosis";
-            this.btnSimpanDiagnosis.Size = new System.Drawing.Size(182, 44);
+            this.btnSimpanDiagnosis.Size = new System.Drawing.Size(181, 35);
             this.btnSimpanDiagnosis.TabIndex = 3;
             this.btnSimpanDiagnosis.Text = "Simpan Diagnosis";
-            this.btnSimpanDiagnosis.UseVisualStyleBackColor = true;
+            this.btnSimpanDiagnosis.UseVisualStyleBackColor = false;
             this.btnSimpanDiagnosis.Click += new System.EventHandler(this.btnSimpanDiagnosis_Click);
             // 
             // cmbRisiko
             // 
             this.cmbRisiko.FormattingEnabled = true;
-            this.cmbRisiko.Location = new System.Drawing.Point(442, 166);
+            this.cmbRisiko.Location = new System.Drawing.Point(442, 105);
             this.cmbRisiko.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbRisiko.Name = "cmbRisiko";
             this.cmbRisiko.Size = new System.Drawing.Size(143, 33);
@@ -143,27 +148,27 @@
             // 
             // textBox2
             // 
-            this.textBox2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox2.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Location = new System.Drawing.Point(345, 166);
+            this.textBox2.Location = new System.Drawing.Point(299, 110);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(66, 24);
+            this.textBox2.Size = new System.Drawing.Size(130, 24);
             this.textBox2.TabIndex = 21;
-            this.textBox2.Text = "RIsiko";
+            this.textBox2.Text = "Tingkat Risiko";
             // 
             // textBox1
             // 
-            this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox1.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(345, 95);
+            this.textBox1.Location = new System.Drawing.Point(299, 40);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(66, 24);
+            this.textBox1.Size = new System.Drawing.Size(112, 24);
             this.textBox1.TabIndex = 22;
-            this.textBox1.Text = "Pasien";
+            this.textBox1.Text = "Nama Pasien";
             // 
             // textBox7
             // 
-            this.textBox7.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox7.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox7.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox7.Location = new System.Drawing.Point(362, 347);
@@ -185,7 +190,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox3.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox3.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox3.Location = new System.Drawing.Point(912, 347);
@@ -205,12 +210,47 @@
             this.pictureBox3.TabIndex = 30;
             this.pictureBox3.TabStop = false;
             // 
+            // btnHapus
+            // 
+            this.btnHapus.BackColor = System.Drawing.Color.DarkGray;
+            this.btnHapus.ForeColor = System.Drawing.Color.White;
+            this.btnHapus.Location = new System.Drawing.Point(684, 83);
+            this.btnHapus.Name = "btnHapus";
+            this.btnHapus.Size = new System.Drawing.Size(181, 36);
+            this.btnHapus.TabIndex = 31;
+            this.btnHapus.Text = "Hapus Diagnosis";
+            this.btnHapus.UseVisualStyleBackColor = false;
+            this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.BackColor = System.Drawing.Color.DarkGray;
+            this.btnUpdate.ForeColor = System.Drawing.Color.White;
+            this.btnUpdate.Location = new System.Drawing.Point(684, 125);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(181, 37);
+            this.btnUpdate.TabIndex = 32;
+            this.btnUpdate.Text = "Perbarui Diagnosis";
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // txtIdDiagnosis
+            // 
+            this.txtIdDiagnosis.Location = new System.Drawing.Point(1176, 0);
+            this.txtIdDiagnosis.Name = "txtIdDiagnosis";
+            this.txtIdDiagnosis.Size = new System.Drawing.Size(70, 31);
+            this.txtIdDiagnosis.TabIndex = 33;
+            this.txtIdDiagnosis.Visible = false;
+            // 
             // FormDokter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.BackColor = System.Drawing.Color.PaleTurquoise;
             this.ClientSize = new System.Drawing.Size(1247, 696);
+            this.Controls.Add(this.txtIdDiagnosis);
+            this.Controls.Add(this.btnUpdate);
+            this.Controls.Add(this.btnHapus);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.pictureBox2);
@@ -224,6 +264,7 @@
             this.Controls.Add(this.dgvRiwayatPasien);
             this.Controls.Add(this.cmbPasien);
             this.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.Color.White;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FormDokter";
@@ -257,5 +298,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button btnHapus;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.TextBox txtIdDiagnosis;
     }
 }
