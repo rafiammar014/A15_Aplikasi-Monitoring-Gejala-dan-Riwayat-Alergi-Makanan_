@@ -30,7 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblUserLogin = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -57,6 +60,8 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.catatanmakananBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gejalaalergiBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
@@ -69,51 +74,50 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.db_alergi_makananDataSet = new MedAllergy.db_alergi_makananDataSet();
-            this.catatanmakananBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.catatan_makananTableAdapter = new MedAllergy.db_alergi_makananDataSetTableAdapters.catatan_makananTableAdapter();
-            this.gejalaalergiBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.gejala_alergiTableAdapter = new MedAllergy.db_alergi_makananDataSetTableAdapters.gejala_alergiTableAdapter();
+            this.chartKeparahan = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRiwayatAlergi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDiagnosisPasien)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
-            this.bindingNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.db_alergi_makananDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.catatanmakananBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gejalaalergiBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
+            this.bindingNavigator1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartKeparahan)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.SteelBlue;
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel1.Controls.Add(this.lblUserLogin);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(0, -2);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1356, 78);
+            this.panel1.Size = new System.Drawing.Size(1356, 63);
             this.panel1.TabIndex = 0;
             // 
             // lblUserLogin
             // 
             this.lblUserLogin.AutoSize = true;
-            this.lblUserLogin.Location = new System.Drawing.Point(589, 27);
+            this.lblUserLogin.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lblUserLogin.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lblUserLogin.Location = new System.Drawing.Point(580, 23);
             this.lblUserLogin.Name = "lblUserLogin";
             this.lblUserLogin.Size = new System.Drawing.Size(139, 23);
             this.lblUserLogin.TabIndex = 33;
             this.lblUserLogin.Text = "Selamat Datang";
+            this.lblUserLogin.Click += new System.EventHandler(this.lblUserLogin_Click);
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(25, 21);
+            this.pictureBox1.Location = new System.Drawing.Point(25, 14);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(42, 34);
+            this.pictureBox1.Size = new System.Drawing.Size(45, 41);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 19;
             this.pictureBox1.TabStop = false;
@@ -121,8 +125,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(77, 27);
+            this.label1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.Location = new System.Drawing.Point(77, 23);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(123, 23);
@@ -131,8 +136,9 @@
             // 
             // txtIdOtomatis
             // 
+            this.txtIdOtomatis.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtIdOtomatis.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtIdOtomatis.Location = new System.Drawing.Point(12, 321);
+            this.txtIdOtomatis.Location = new System.Drawing.Point(1232, 93);
             this.txtIdOtomatis.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtIdOtomatis.Name = "txtIdOtomatis";
             this.txtIdOtomatis.ReadOnly = true;
@@ -144,6 +150,7 @@
             // 
             // txtNamaMakanan
             // 
+            this.txtNamaMakanan.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtNamaMakanan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNamaMakanan.Location = new System.Drawing.Point(169, 92);
             this.txtNamaMakanan.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -154,6 +161,7 @@
             // 
             // txtKomposisi
             // 
+            this.txtKomposisi.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtKomposisi.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtKomposisi.Location = new System.Drawing.Point(169, 131);
             this.txtKomposisi.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -165,6 +173,7 @@
             // 
             // dtpWaktu
             // 
+            this.dtpWaktu.CalendarMonthBackground = System.Drawing.Color.WhiteSmoke;
             this.dtpWaktu.Location = new System.Drawing.Point(7, 174);
             this.dtpWaktu.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dtpWaktu.Name = "dtpWaktu";
@@ -173,46 +182,50 @@
             // 
             // btnSimpan
             // 
-            this.btnSimpan.Location = new System.Drawing.Point(555, 435);
+            this.btnSimpan.BackColor = System.Drawing.SystemColors.Window;
+            this.btnSimpan.Location = new System.Drawing.Point(7, 218);
             this.btnSimpan.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnSimpan.Name = "btnSimpan";
             this.btnSimpan.Size = new System.Drawing.Size(105, 32);
             this.btnSimpan.TabIndex = 5;
             this.btnSimpan.Text = "Save";
-            this.btnSimpan.UseVisualStyleBackColor = true;
+            this.btnSimpan.UseVisualStyleBackColor = false;
             this.btnSimpan.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(668, 437);
+            this.btnUpdate.BackColor = System.Drawing.SystemColors.Window;
+            this.btnUpdate.Location = new System.Drawing.Point(120, 220);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(94, 29);
             this.btnUpdate.TabIndex = 6;
             this.btnUpdate.Text = "Update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.UseVisualStyleBackColor = false;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(782, 437);
+            this.btnHapus.BackColor = System.Drawing.SystemColors.Window;
+            this.btnHapus.Location = new System.Drawing.Point(234, 220);
             this.btnHapus.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnHapus.Name = "btnHapus";
             this.btnHapus.Size = new System.Drawing.Size(88, 29);
             this.btnHapus.TabIndex = 7;
             this.btnHapus.Text = "Delete";
-            this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.UseVisualStyleBackColor = false;
             this.btnHapus.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(887, 437);
+            this.btnClear.BackColor = System.Drawing.SystemColors.Window;
+            this.btnClear.Location = new System.Drawing.Point(339, 220);
             this.btnClear.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(89, 29);
             this.btnClear.TabIndex = 8;
             this.btnClear.Text = "Clear";
-            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.Form1_Load);
             // 
             // dgvRiwayatAlergi
@@ -220,14 +233,14 @@
             this.dgvRiwayatAlergi.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.dgvRiwayatAlergi.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvRiwayatAlergi.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.SteelBlue;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.SteelBlue;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvRiwayatAlergi.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.SteelBlue;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.SteelBlue;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvRiwayatAlergi.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvRiwayatAlergi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRiwayatAlergi.EnableHeadersVisualStyles = false;
             this.dgvRiwayatAlergi.Location = new System.Drawing.Point(14, 484);
@@ -245,7 +258,7 @@
             this.lblTotalData.AutoSize = true;
             this.lblTotalData.BackColor = System.Drawing.Color.SteelBlue;
             this.lblTotalData.ForeColor = System.Drawing.Color.White;
-            this.lblTotalData.Location = new System.Drawing.Point(1199, 683);
+            this.lblTotalData.Location = new System.Drawing.Point(1195, 681);
             this.lblTotalData.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTotalData.Name = "lblTotalData";
             this.lblTotalData.Size = new System.Drawing.Size(92, 23);
@@ -259,6 +272,7 @@
             // 
             // txtGejala
             // 
+            this.txtGejala.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtGejala.Location = new System.Drawing.Point(648, 92);
             this.txtGejala.Name = "txtGejala";
             this.txtGejala.Size = new System.Drawing.Size(162, 30);
@@ -266,6 +280,7 @@
             // 
             // cmbKeparahan
             // 
+            this.cmbKeparahan.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cmbKeparahan.FormattingEnabled = true;
             this.cmbKeparahan.Items.AddRange(new object[] {
             "Ringan",
@@ -278,8 +293,9 @@
             // 
             // textBox1
             // 
-            this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox1.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.textBox1.Location = new System.Drawing.Point(10, 89);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(138, 23);
@@ -288,8 +304,9 @@
             // 
             // textBox2
             // 
-            this.textBox2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox2.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.textBox2.Location = new System.Drawing.Point(10, 131);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(104, 23);
@@ -298,8 +315,9 @@
             // 
             // textBox3
             // 
-            this.textBox3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox3.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.textBox3.Location = new System.Drawing.Point(430, 99);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(104, 23);
@@ -308,8 +326,9 @@
             // 
             // textBox4
             // 
-            this.textBox4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox4.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.textBox4.Location = new System.Drawing.Point(430, 134);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(159, 23);
@@ -318,9 +337,10 @@
             // 
             // textBox6
             // 
-            this.textBox6.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox6.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox6.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.textBox6.Location = new System.Drawing.Point(62, 448);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(139, 24);
@@ -332,22 +352,23 @@
             this.dgvDiagnosisPasien.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.dgvDiagnosisPasien.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvDiagnosisPasien.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDiagnosisPasien.Location = new System.Drawing.Point(992, 299);
+            this.dgvDiagnosisPasien.Location = new System.Drawing.Point(992, 318);
             this.dgvDiagnosisPasien.Name = "dgvDiagnosisPasien";
             this.dgvDiagnosisPasien.ReadOnly = true;
             this.dgvDiagnosisPasien.RowHeadersVisible = false;
             this.dgvDiagnosisPasien.RowHeadersWidth = 51;
             this.dgvDiagnosisPasien.RowTemplate.Height = 24;
             this.dgvDiagnosisPasien.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDiagnosisPasien.Size = new System.Drawing.Size(348, 173);
+            this.dgvDiagnosisPasien.Size = new System.Drawing.Size(348, 154);
             this.dgvDiagnosisPasien.TabIndex = 30;
             // 
             // textBox8
             // 
-            this.textBox8.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBox8.BackColor = System.Drawing.Color.PaleTurquoise;
             this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox8.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox8.Location = new System.Drawing.Point(1046, 269);
+            this.textBox8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.textBox8.Location = new System.Drawing.Point(1044, 285);
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(94, 24);
             this.textBox8.TabIndex = 31;
@@ -366,21 +387,28 @@
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(992, 250);
+            this.pictureBox3.Location = new System.Drawing.Point(990, 272);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(48, 43);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 28;
             this.pictureBox3.TabStop = false;
             // 
+            // catatanmakananBindingSource
+            // 
+            this.catatanmakananBindingSource.DataMember = "catatan_makanan";
+            // 
+            // gejalaalergiBindingSource
+            // 
+            this.gejalaalergiBindingSource.DataMember = "gejala_alergi";
+            // 
             // bindingNavigator1
             // 
             this.bindingNavigator1.AddNewItem = this.bindingNavigatorAddNewItem;
-            this.bindingNavigator1.BindingSource = this.catatanmakananBindingSource;
+            this.bindingNavigator1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.bindingNavigator1.CountItem = this.bindingNavigatorCountItem;
             this.bindingNavigator1.DeleteItem = this.bindingNavigatorDeleteItem;
             this.bindingNavigator1.Dock = System.Windows.Forms.DockStyle.None;
-            this.bindingNavigator1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.bindingNavigator1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.bindingNavigator1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bindingNavigatorMoveFirstItem,
@@ -394,15 +422,14 @@
             this.bindingNavigatorSeparator2,
             this.bindingNavigatorAddNewItem,
             this.bindingNavigatorDeleteItem});
-            this.bindingNavigator1.Location = new System.Drawing.Point(1025, 79);
+            this.bindingNavigator1.Location = new System.Drawing.Point(1015, 66);
             this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
             this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
             this.bindingNavigator1.MoveNextItem = this.bindingNavigatorMoveNextItem;
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.bindingNavigator1.Size = new System.Drawing.Size(263, 27);
+            this.bindingNavigator1.Size = new System.Drawing.Size(302, 31);
             this.bindingNavigator1.TabIndex = 33;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -412,13 +439,13 @@
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorAddNewItem.Text = "Add new";
             // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 24);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 28);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -428,7 +455,7 @@
             this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorDeleteItem.Text = "Delete";
             // 
             // bindingNavigatorMoveFirstItem
@@ -437,7 +464,7 @@
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveFirstItem.Text = "Move first";
             // 
             // bindingNavigatorMovePreviousItem
@@ -446,13 +473,13 @@
             this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMovePreviousItem.Text = "Move previous";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorPositionItem
             // 
@@ -467,7 +494,7 @@
             // bindingNavigatorSeparator1
             // 
             this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorMoveNextItem
             // 
@@ -475,7 +502,7 @@
             this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveNextItem.Text = "Move next";
             // 
             // bindingNavigatorMoveLastItem
@@ -484,44 +511,39 @@
             this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveLastItem.Text = "Move last";
-            this.bindingNavigatorMoveLastItem.Visible = false;
             // 
             // bindingNavigatorSeparator2
             // 
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
-            // db_alergi_makananDataSet
+            // chartKeparahan
             // 
-            this.db_alergi_makananDataSet.DataSetName = "db_alergi_makananDataSet";
-            this.db_alergi_makananDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // catatanmakananBindingSource
-            // 
-            this.catatanmakananBindingSource.DataMember = "catatan_makanan";
-            this.catatanmakananBindingSource.DataSource = this.db_alergi_makananDataSet;
-            // 
-            // catatan_makananTableAdapter
-            // 
-            this.catatan_makananTableAdapter.ClearBeforeFill = true;
-            // 
-            // gejalaalergiBindingSource
-            // 
-            this.gejalaalergiBindingSource.DataMember = "gejala_alergi";
-            this.gejalaalergiBindingSource.DataSource = this.db_alergi_makananDataSet;
-            // 
-            // gejala_alergiTableAdapter
-            // 
-            this.gejala_alergiTableAdapter.ClearBeforeFill = true;
+            this.chartKeparahan.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            chartArea1.Name = "ChartArea1";
+            this.chartKeparahan.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chartKeparahan.Legends.Add(legend1);
+            this.chartKeparahan.Location = new System.Drawing.Point(685, 318);
+            this.chartKeparahan.Name = "chartKeparahan";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartKeparahan.Series.Add(series1);
+            this.chartKeparahan.Size = new System.Drawing.Size(293, 154);
+            this.chartKeparahan.TabIndex = 34;
+            this.chartKeparahan.Text = "chart1";
+            this.chartKeparahan.Click += new System.EventHandler(this.chartKeparahan_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.BackColor = System.Drawing.Color.PaleTurquoise;
             this.ClientSize = new System.Drawing.Size(1353, 722);
+            this.Controls.Add(this.chartKeparahan);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.textBox8);
@@ -546,6 +568,7 @@
             this.Controls.Add(this.txtIdOtomatis);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
@@ -559,12 +582,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDiagnosisPasien)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.catatanmakananBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gejalaalergiBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.db_alergi_makananDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.catatanmakananBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gejalaalergiBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartKeparahan)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -598,6 +621,10 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label lblUserLogin;
+    
+        private System.Windows.Forms.BindingSource catatanmakananBindingSource;
+
+        private System.Windows.Forms.BindingSource gejalaalergiBindingSource;
         private System.Windows.Forms.BindingNavigator bindingNavigator1;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
@@ -610,11 +637,7 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveNextItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
-        private db_alergi_makananDataSet db_alergi_makananDataSet;
-        private System.Windows.Forms.BindingSource catatanmakananBindingSource;
-        private db_alergi_makananDataSetTableAdapters.catatan_makananTableAdapter catatan_makananTableAdapter;
-        private System.Windows.Forms.BindingSource gejalaalergiBindingSource;
-        private db_alergi_makananDataSetTableAdapters.gejala_alergiTableAdapter gejala_alergiTableAdapter;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartKeparahan;
     }
 }
 

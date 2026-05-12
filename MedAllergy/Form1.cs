@@ -25,30 +25,22 @@ namespace MedAllergy
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // 1. Menampilkan siapa yang sedang login
             TampilUserLogin();
 
-            // 2. Seting UI DataGridView agar rapi dan tidak bisa diedit sembarangan
+            // Seting UI DataGridView
             dgvRiwayatAlergi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRiwayatAlergi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRiwayatAlergi.ReadOnly = true;
             dgvRiwayatAlergi.AllowUserToAddRows = false;
             dgvRiwayatAlergi.RowHeadersVisible = false;
 
-            // 3. Menghubungkan BindingSource dengan Event (Pengganti CellClick)
+            // Hubungkan BindingSource dengan Event
             bsRiwayat.CurrentChanged += bsRiwayat_CurrentChanged;
 
-            // 4. Memuat Data dari Database menggunakan Koding Manual (Stored Procedure/View)
+            // Cukup gunakan dua fungsi ini (Manual & Aman)
             TampilDataRiwayatLengkap("");
             TampilDiagnosisSaya();
-
-            // 5. Memuat Data dari Database menggunakan Wizard (Pindahan dari Form1_Load_1)
-            // (Abaikan jika ada garis merah pada bagian ini, sesuaikan dengan nama DataSet Anda jika berbeda)
-            if (this.db_alergi_makananDataSet != null)
-            {
-                this.gejala_alergiTableAdapter.Fill(this.db_alergi_makananDataSet.gejala_alergi);
-                this.catatan_makananTableAdapter.Fill(this.db_alergi_makananDataSet.catatan_makanan);
-            }
+            LoadGrafikAlergi();
         }
 
         private void TampilUserLogin()
@@ -59,7 +51,7 @@ namespace MedAllergy
                 SqlCommand cmd = new SqlCommand("SELECT nama FROM users WHERE id_user = @id", conn);
                 cmd.Parameters.AddWithValue("@id", idUserLogin);
                 object nama = cmd.ExecuteScalar();
-                if (nama != null) lblUserLogin.Text = "Login sebagai: " + nama.ToString();
+                if (nama != null) lblUserLogin.Text = "Selamat Datang " + nama.ToString();
             }
             catch { }
             finally { if (conn.State == ConnectionState.Open) conn.Close(); }
@@ -202,6 +194,7 @@ namespace MedAllergy
                 if (adaYangDisimpan)
                 {
                     TampilDataRiwayatLengkap("");
+                    LoadGrafikAlergi();
                 }
             }
             catch (Exception ex) { MessageBox.Show("Gagal Simpan: " + ex.Message); }
@@ -306,10 +299,54 @@ namespace MedAllergy
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'db_alergi_makananDataSet.gejala_alergi' table. You can move, or remove it, as needed.
-            this.gejala_alergiTableAdapter.Fill(this.db_alergi_makananDataSet.gejala_alergi);
-            // TODO: This line of code loads data into the 'db_alergi_makananDataSet.catatan_makanan' table. You can move, or remove it, as needed.
-            this.catatan_makananTableAdapter.Fill(this.db_alergi_makananDataSet.catatan_makanan);
+
+        }
+
+
+        private void LoadGrafikAlergi()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                // Menghitung jumlah riwayat berdasarkan tingkat keparahannya
+                string query = @"SELECT tingkat_keparahan, COUNT(id_gejala) as jumlah 
+                         FROM vw_DashboardAlergi 
+                         WHERE id_user = @IdUser AND tingkat_keparahan != '-'
+                         GROUP BY tingkat_keparahan";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@IdUser", idUserLogin);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                // Reset chart sebelum diisi
+                chartKeparahan.Series.Clear();
+                chartKeparahan.Series.Add("Keparahan");
+                // Mengubah bentuk chart menjadi Pie (Lingkaran)
+                chartKeparahan.Series["Keparahan"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+
+                while (reader.Read())
+                {
+                    string tingkat = reader["tingkat_keparahan"].ToString();
+                    int jumlah = Convert.ToInt32(reader["jumlah"]);
+
+                    // Tambahkan data ke dalam grafik
+                    chartKeparahan.Series["Keparahan"].Points.AddXY(tingkat, jumlah);
+                }
+                reader.Close();
+            }
+            catch { /* Biarkan kosong jika grafik gagal dimuat */ }
+            finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+        }
+
+        private void chartKeparahan_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblUserLogin_Click(object sender, EventArgs e)
+        {
 
         }
     }
