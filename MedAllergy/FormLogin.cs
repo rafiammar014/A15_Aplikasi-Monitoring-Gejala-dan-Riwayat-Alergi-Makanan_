@@ -51,7 +51,7 @@ namespace MedAllergy
                                 if (roleUser == "pasien")
                                 {
                                     int idLogin = Convert.ToInt32(reader["id_user"]);
-                                    Form1 formPasien = new Form1(idLogin);
+                                    Dashboard formPasien = new Dashboard(idLogin);
                                     formPasien.Show();
                                 }
                                 else if (roleUser == "dokter")

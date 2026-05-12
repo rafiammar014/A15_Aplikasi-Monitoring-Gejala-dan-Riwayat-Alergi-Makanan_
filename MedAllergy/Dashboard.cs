@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace MedAllergy
 {
-    public partial class Form1 : Form
+    public partial class Dashboard : Form
     {
         private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
@@ -17,7 +17,7 @@ namespace MedAllergy
         // TUGAS 4 & 5: Membuat Objek BindingSource
         private BindingSource bsRiwayat = new BindingSource();
 
-        public Form1(int idUser)
+        public Dashboard(int idUser)
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
