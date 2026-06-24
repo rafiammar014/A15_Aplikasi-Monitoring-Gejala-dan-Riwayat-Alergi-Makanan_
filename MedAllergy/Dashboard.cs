@@ -6,13 +6,20 @@ using System.Windows.Forms;
 
 namespace MedAllergy
 {
+
+
+
+
     public partial class Dashboard : Form
     {
         private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
 
+
+
         private int idUserLogin;
         private string idGejalaTerpilih = "0";
+        private string tabelYangDipilih = ""; // Penanda tabel mana yang sedang aktif
 
         // TUGAS 4 & 5: Membuat Objek BindingSource
         private BindingSource bsRiwayat = new BindingSource();
@@ -28,6 +35,9 @@ namespace MedAllergy
         {
             TampilUserLogin();
 
+            txtNamaMakanan.KeyPress += ValidasiHanyaHuruf;
+            txtKomposisi.KeyPress += ValidasiHanyaHuruf;
+            txtGejala.KeyPress += ValidasiHanyaHuruf;
             // Seting UI DataGridView
             dgvRiwayatAlergi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvRiwayatAlergi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -37,6 +47,9 @@ namespace MedAllergy
 
             // Hubungkan BindingSource dengan Event
             bsRiwayat.CurrentChanged += bsRiwayat_CurrentChanged;
+
+            dgvRiwayatAlergi.CellClick += dgvRiwayatAlergi_CellClick;
+            dgvDiagnosisPasien.CellClick += dgvDiagnosisPasien_CellClick;
 
             // Cukup gunakan dua fungsi ini (Manual & Aman)
             TampilDataRiwayatLengkap("");
@@ -311,26 +324,88 @@ namespace MedAllergy
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtIdOtomatis.Text)) { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
 
-            if (MessageBox.Show("Yakin hapus data ini? Transaksi ini akan menghapus Makanan dan Gejala sekaligus.", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
+
+            // LOGIKA 1: Menghapus Riwayat Alergi Makanan
+            if (tabelYangDipilih == "Alergi")
             {
-                try
+                if (string.IsNullOrEmpty(txtIdOtomatis.Text)) { MessageBox.Show("Pilih data alergi dari tabel dulu!"); return; }
+
+                if (MessageBox.Show("Yakin hapus data ini? Makanan dan Gejala akan terhapus.", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    try
+                    {
+                        if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("sp_DeleteMakanan", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdMakanan", txtIdOtomatis.Text);
-                    cmd.ExecuteNonQuery();
+                        // MENGGUNAKAN TRANSACTION
+                        using (SqlTransaction trans = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                SqlCommand cmd = new SqlCommand("sp_DeleteMakanan", conn, trans);
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@IdMakanan", txtIdOtomatis.Text);
+                                cmd.ExecuteNonQuery();
 
-                    MessageBox.Show("Data berhasil dihapus!");
-                    btnClear_Click(null, null);
-                    TampilDataRiwayatLengkap("");
+                                trans.Commit(); // Jika SP sukses, simpan perubahan permanen
+                                MessageBox.Show("Data riwayat alergi berhasil dihapus!");
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback(); // Jika SP gagal, batalkan semua perubahan di database
+                                throw new Exception("Transaksi dibatalkan: " + ex.Message);
+                            }
+                        }
+                        btnClear_Click(null, null);
+                        TampilDataRiwayatLengkap("");
+                        LoadGrafikAlergi();
+                    }
+                    catch (Exception ex) { MessageBox.Show("Gagal Hapus: " + ex.Message); }
+                    finally { if (conn.State == ConnectionState.Open) conn.Close(); }
                 }
-                catch (Exception ex) { MessageBox.Show("Gagal Hapus: " + ex.Message); }
-                finally { if (conn.State == ConnectionState.Open) conn.Close(); }
-                LoadGrafikAlergi();
+            }
+
+            // LOGIKA 2: Menghapus Diagnosis
+            else if (tabelYangDipilih == "Diagnosis")
+            {
+                if (dgvDiagnosisPasien.SelectedRows.Count == 0) { MessageBox.Show("Pilih data diagnosis dari tabel dulu!"); return; }
+
+                if (MessageBox.Show("Yakin hapus data diagnosis ini?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    // Ambil ID Diagnosis dari baris yang dipilih
+                    string idDiag = dgvDiagnosisPasien.SelectedRows[0].Cells["id_diagnosis"].Value.ToString();
+
+                    try
+                    {
+                        if (conn.State == ConnectionState.Closed) conn.Open();
+
+                        // MENGGUNAKAN TRANSACTION
+                        using (SqlTransaction trans = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                SqlCommand cmd = new SqlCommand("DELETE FROM diagnosis_dokter WHERE id_diagnosis = @Id", conn, trans);
+                                cmd.Parameters.AddWithValue("@Id", idDiag);
+                                cmd.ExecuteNonQuery();
+
+                                trans.Commit(); // Jika sukses, simpan
+                                MessageBox.Show("Data diagnosis berhasil dihapus!");
+                            }
+                            catch (Exception ex)
+                            {
+                                trans.Rollback(); // Jika gagal, batalkan
+                                throw new Exception("Transaksi dibatalkan: " + ex.Message);
+                            }
+                        }
+                        TampilDiagnosisSaya(); // Refresh tabel diagnosis
+                    }
+                    catch (Exception ex) { MessageBox.Show("Gagal Hapus: " + ex.Message); }
+                    finally { if (conn.State == ConnectionState.Open) conn.Close(); }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Silakan klik salah satu baris pada tabel Alergi atau Diagnosis terlebih dahulu.");
             }
         }
 
@@ -350,6 +425,34 @@ namespace MedAllergy
             cmbKeparahan.SelectedIndex = -1;
         }
 
+        // Add this method inside the Dashboard class (e.g., next to other event handlers)
+        private void dgvDiagnosisPasien_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            tabelYangDipilih = "Diagnosis"; // <-- Tandai tabel aktif di sini
+
+            try
+            {
+                dgvDiagnosisPasien.ClearSelection();
+                dgvDiagnosisPasien.Rows[e.RowIndex].Selected = true;
+            }
+            catch { }
+        }
+
+        // Add this inside the Dashboard class (e.g., below bsRiwayat_CurrentChanged)
+        private void dgvRiwayatAlergi_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            tabelYangDipilih = "Alergi"; // <-- Tandai tabel aktif di sini
+
+            try
+            {
+                bsRiwayat.Position = e.RowIndex;
+            }
+            catch { }
+        }
         private void TampilDiagnosisSaya()
         {
             try
@@ -357,10 +460,10 @@ namespace MedAllergy
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
                 // Cari diagnosis yang id_user-nya cocok dengan pasien yang login
-                string query = @"SELECT tanggal_diagnosis, catatan_medis, tingkat_risiko 
-                         FROM diagnosis_dokter 
-                         WHERE id_user = @idPasien
-                         ORDER BY tanggal_diagnosis DESC";
+                string query = @"SELECT id_diagnosis, tanggal_diagnosis, catatan_medis, tingkat_risiko 
+                 FROM diagnosis_dokter 
+                 WHERE id_user = @idPasien
+                 ORDER BY tanggal_diagnosis DESC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@idPasien", idUserLogin);
@@ -371,6 +474,9 @@ namespace MedAllergy
 
                 // 1. MASUKKAN DATA KE DATAGRIDVIEW TERLEBIH DAHULU
                 dgvDiagnosisPasien.DataSource = dt;
+
+                if (dgvDiagnosisPasien.Columns.Contains("id_diagnosis"))
+                    dgvDiagnosisPasien.Columns["id_diagnosis"].Visible = false;
 
                 // ========================================================
                 // 2. STYLING DATAGRIDVIEW (Dijalankan setelah data masuk)
@@ -462,6 +568,26 @@ namespace MedAllergy
         private void dtpWaktu_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        // Fungsi Validasi Reusable
+        private void ValidasiHanyaHuruf(object sender, KeyPressEventArgs e)
+        {
+            // Hanya izinkan huruf, spasi, dan tombol kontrol (seperti Backspace)
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true; // Tolak karakter selain di atas
+                MessageBox.Show("Input tidak valid! Harap masukkan huruf saja.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnCetakDashboard_Click(object sender, EventArgs e)
+        {
+            // Membuka form FilterDataDiagnosiscs yang sudah dibuat sebelumnya
+            FilterDataDiagnosiscs formFilter = new FilterDataDiagnosiscs();
+
+            // Menampilkan form tersebut ke layar
+            formFilter.Show();
         }
     }
 }

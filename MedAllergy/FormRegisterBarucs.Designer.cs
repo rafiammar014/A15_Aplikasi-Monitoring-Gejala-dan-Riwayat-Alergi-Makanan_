@@ -42,22 +42,25 @@
             // txtNamaBaru
             // 
             this.txtNamaBaru.Location = new System.Drawing.Point(265, 197);
+            this.txtNamaBaru.Multiline = true;
             this.txtNamaBaru.Name = "txtNamaBaru";
-            this.txtNamaBaru.Size = new System.Drawing.Size(185, 22);
+            this.txtNamaBaru.Size = new System.Drawing.Size(194, 32);
             this.txtNamaBaru.TabIndex = 0;
             // 
             // txtEmailBaru
             // 
             this.txtEmailBaru.Location = new System.Drawing.Point(264, 255);
+            this.txtEmailBaru.Multiline = true;
             this.txtEmailBaru.Name = "txtEmailBaru";
-            this.txtEmailBaru.Size = new System.Drawing.Size(185, 22);
+            this.txtEmailBaru.Size = new System.Drawing.Size(195, 32);
             this.txtEmailBaru.TabIndex = 1;
             // 
             // txtPassBaru
             // 
-            this.txtPassBaru.Location = new System.Drawing.Point(264, 318);
+            this.txtPassBaru.Location = new System.Drawing.Point(264, 317);
+            this.txtPassBaru.Multiline = true;
             this.txtPassBaru.Name = "txtPassBaru";
-            this.txtPassBaru.Size = new System.Drawing.Size(185, 22);
+            this.txtPassBaru.Size = new System.Drawing.Size(195, 32);
             this.txtPassBaru.TabIndex = 2;
             // 
             // brnSimpan
@@ -88,7 +91,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(216, 72);
+            this.label2.Location = new System.Drawing.Point(230, 72);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(258, 45);
             this.label2.TabIndex = 32;
