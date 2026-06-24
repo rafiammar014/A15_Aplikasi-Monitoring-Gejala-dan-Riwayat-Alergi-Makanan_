@@ -6,10 +6,16 @@ using System.Windows.Forms;
 
 namespace MedAllergy
 {
+
+
+
+
     public partial class Dashboard : Form
     {
         private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-RAFIAMMA;Initial Catalog=db_alergi_makanan;User ID=sa;Password=Rafi12345;TrustServerCertificate=True;";
+
+
 
         private int idUserLogin;
         private string idGejalaTerpilih = "0";
