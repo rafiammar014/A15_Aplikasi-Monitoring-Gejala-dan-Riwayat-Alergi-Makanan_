@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsMedAllergy" targetNamespace="http://tempuri.org/dsMedAllergy.xsd" xmlns:mstns="http://tempuri.org/dsMedAllergy.xsd" xmlns="http://tempuri.org/dsMedAllergy.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsMedAllergy" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="dsMedAllergy" msprop:Generator_DataSetName="dsMedAllergy">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTableDiagnosis" msprop:Generator_RowEvHandlerName="DataTableDiagnosisRowChangeEventHandler" msprop:Generator_RowDeletedName="DataTableDiagnosisRowDeleted" msprop:Generator_RowDeletingName="DataTableDiagnosisRowDeleting" msprop:Generator_RowEvArgName="DataTableDiagnosisRowChangeEvent" msprop:Generator_TablePropName="DataTableDiagnosis" msprop:Generator_RowChangedName="DataTableDiagnosisRowChanged" msprop:Generator_RowChangingName="DataTableDiagnosisRowChanging" msprop:Generator_TableClassName="DataTableDiagnosisDataTable" msprop:Generator_RowClassName="DataTableDiagnosisRow" msprop:Generator_TableVarName="tableDataTableDiagnosis" msprop:Generator_UserTableName="DataTableDiagnosis">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="NamaPasien" msprop:Generator_ColumnPropNameInRow="NamaPasien" msprop:Generator_ColumnPropNameInTable="NamaPasienColumn" msprop:Generator_ColumnVarNameInTable="columnNamaPasien" msprop:Generator_UserColumnName="NamaPasien" type="xs:string" minOccurs="0" />
+              <xs:element name="Tanggal" msprop:Generator_ColumnPropNameInRow="Tanggal" msprop:Generator_ColumnPropNameInTable="TanggalColumn" msprop:Generator_ColumnVarNameInTable="columnTanggal" msprop:Generator_UserColumnName="Tanggal" type="xs:string" minOccurs="0" />
+              <xs:element name="Catatan" msprop:Generator_ColumnPropNameInRow="Catatan" msprop:Generator_ColumnPropNameInTable="CatatanColumn" msprop:Generator_ColumnVarNameInTable="columnCatatan" msprop:Generator_UserColumnName="Catatan" type="xs:string" minOccurs="0" />
+              <xs:element name="Risiko" msprop:Generator_ColumnPropNameInRow="Risiko" msprop:Generator_ColumnPropNameInTable="RisikoColumn" msprop:Generator_ColumnVarNameInTable="columnRisiko" msprop:Generator_UserColumnName="Risiko" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
